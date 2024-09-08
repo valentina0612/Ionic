@@ -1,0 +1,16 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>{{locationName}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Characters Origin</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <app-characters [characters]="characters" [titulo]="'Characters'" [subtitulo]="'Ricky and Morty'"></app-characters>
+</ion-content>
+

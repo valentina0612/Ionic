@@ -1,0 +1,26 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Favorites
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Tab 3</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  
+  <ion-list>
+    <ion-item>
+      <ion-select label="Sorted by" placeholder="Sorted by">
+        <ion-select-option value="lastest">Latest</ion-select-option>
+        <ion-select-option value="oldest">Earliest</ion-select-option>
+      </ion-select>
+    </ion-item>
+  </ion-list>
+  
+  <app-explore-container name="Favorites page"></app-explore-container>
+</ion-content>

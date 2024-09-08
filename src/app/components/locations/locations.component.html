@@ -1,0 +1,15 @@
+<ion-card>
+  <ion-card-header>
+    <ion-card-title>Locations</ion-card-title>
+    <ion-card-subtitle>All Locations</ion-card-subtitle>
+  </ion-card-header>
+  <ion-card-content>
+    <ion-list>
+      <ion-item *ngFor="let location of locations" (click)="charactersLocationOirigin(location.name)">
+        <ion-label>{{location.name}}</ion-label>
+        <ion-label>{{location.dimension}}</ion-label>
+        <ion-label>{{location.type}}</ion-label>
+      </ion-item>
+    </ion-list>
+  </ion-card-content>
+</ion-card>

@@ -1,0 +1,23 @@
+<ion-card *ngIf="character">
+  <ion-card-header>
+    <ion-card-title>{{character.name}}</ion-card-title>
+  </ion-card-header>
+  <ion-chip>
+    <ion-icon name="location-outline" color="secondary"></ion-icon>
+    <ion-label>{{character.location.name}}</ion-label>
+  </ion-chip>
+  <ion-chip>
+    <ion-icon name="planet" color="secondary"></ion-icon>
+    <ion-label>{{character.origin.name}}</ion-label>
+  </ion-chip>
+  <br />
+  <img [src]="character.image" alt="{{ character?.name }}" />
+
+  <ion-card-content>
+    Status: {{ character.status }}
+    <br />
+    Species: {{ character.species}}
+    <br />
+    Gender: {{ character.gender}}
+  </ion-card-content>
+</ion-card>

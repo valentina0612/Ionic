@@ -1,0 +1,45 @@
+<ion-accordion-group [multiple]="true" [value]="['first', 'third']">
+  <ion-accordion value="status">
+    <ion-item slot="header" color="light">
+      <ion-label>Status</ion-label>
+    </ion-item>
+    <div class="ion-padding" slot="content"><ion-checkbox>Alive</ion-checkbox></div>
+    <div class="ion-padding" slot="content"><ion-checkbox>Dead</ion-checkbox></div>
+    <div class="ion-padding" slot="content"><ion-checkbox>Unknown</ion-checkbox></div>
+    <ion-checkbox></ion-checkbox>
+  </ion-accordion>
+
+  <ion-accordion value="gender">
+    <ion-item slot="header" color="light">
+      <ion-label>Gender</ion-label>
+    </ion-item>
+    <div class="ion-padding" slot="content"><ion-checkbox>Femele</ion-checkbox></div>
+    <div class="ion-padding" slot="content"><ion-checkbox>Male</ion-checkbox></div>
+    <div class="ion-padding" slot="content"><ion-checkbox>Genderless</ion-checkbox></div>
+    <div class="ion-padding" slot="content"><ion-checkbox>Unknown</ion-checkbox></div>
+  </ion-accordion>
+</ion-accordion-group>
+
+<ion-card *ngIf="characters!=undefined">
+  <ion-card-header>
+    <ion-card-title [textContent]="titulo"></ion-card-title>
+    <ion-card-subtitle [textContent]="subtitulo"></ion-card-subtitle>
+  </ion-card-header>
+  <ion-card-content>
+    <ion-list *ngIf="characters.length!=0">
+      <ion-item *ngFor="let character of characters">
+        <ion-thumbnail slot="start">
+          <img alt="Silhouette of mountains" (click)="goToCharacterDetail(character.id)"
+          src="{{character.image}}"
+          />
+        </ion-thumbnail>
+        <ion-label (click)="goToCharacterDetail(character.id)">{{character.name}}</ion-label>
+      </ion-item>
+      <ion-item>
+      </ion-item>
+    </ion-list>
+  </ion-card-content>
+  <ion-card-content *ngIf="characters.length==0">
+    <ion-label>No characters found</ion-label>
+  </ion-card-content>
+</ion-card>
