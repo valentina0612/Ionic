@@ -11,11 +11,7 @@ export class RickyMortyBdService {
   constructor(private http: HttpClient) { }
 
   getAllCharacters():any{
-
-
     let url = `${URL_RM}/character`;
-
-
     return this.http.get(url, {}).pipe(
       map((res: any) => {
         console.log('Characters',res);
@@ -23,6 +19,19 @@ export class RickyMortyBdService {
       })
     );
   }
+
+  getMoreCharacters(next_url: string):any{
+  let url = `${URL_RM}/character`;
+  if (next_url.length > 0){
+    url = `${next_url}`
+  }
+  return this.http.get(url, {}).pipe(
+    map((res: any) => {
+      console.log('PERSONAJES_RK',res);
+      return res;
+    })
+  );
+}
 
   getAllLocations():any{
     let url = `${URL_RM}/location`;
@@ -44,9 +53,7 @@ export class RickyMortyBdService {
     );
   }
 
-  async getCharactersByLocation(name:any){
-    console.log('name', name);
-    let allCharacters: any[] = []
+  async getCharactersByLocation(name:any, allCharacters:any){
     let charactersOrigin: any[] = []
     await this.getAllCharacters().toPromise().then((res: any) => {
       allCharacters = res.results
@@ -57,6 +64,19 @@ export class RickyMortyBdService {
       }
     }
     return charactersOrigin
+  }
+
+  getMoreLocations(next_url: string){
+    let url = `${URL_RM}/location`;
+    if (next_url.length > 0){
+      url = `${next_url}`
+    }
+    return this.http.get(url, {}).pipe(
+      map((res: any) => {
+        console.log('LOCATIONS_RK',res);
+        return res;
+      })
+    );
   }
 
 }

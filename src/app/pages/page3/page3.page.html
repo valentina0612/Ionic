@@ -11,6 +11,7 @@
     </ion-toolbar>
   </ion-header>
 
-  <app-characters [characters]="characters" [titulo]="'Characters'" [subtitulo]="'Ricky and Morty'"></app-characters>
+
+  <app-characters *ngIf="show==true" [characters]="characters" [titulo]="'Characters'" [subtitulo]="'Ricky and Morty'"></app-characters>
 </ion-content>
 

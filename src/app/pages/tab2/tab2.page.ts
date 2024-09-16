@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { InfiniteScrollCustomEvent } from '@ionic/angular';
 import { RickyMortyBdService } from 'src/app/services/ricky-morty-bd.service';
 
 @Component({
@@ -9,7 +10,7 @@ import { RickyMortyBdService } from 'src/app/services/ricky-morty-bd.service';
 export class Tab2Page {
 
   locations:any[] = [];
-
+  next_url: string = '';
   constructor(private bd:RickyMortyBdService) {
 
   }
@@ -26,6 +27,27 @@ export class Tab2Page {
         console.log("MISLOCATIONS",this.locations);
       });
   }
-}
 
+  async loadNextLocations() {
+    await this.bd.getMoreLocations(this.next_url).toPromise().then((resp: any) => {
+      let newLocations = resp.results;
+      this.locations.push(...newLocations);
+      this.next_url = resp.info.next;
+      console.log("All_Locations",this.locations);
+      console.log("URL_NEXT",this.next_url);
+      if(this.next_url){
+        this.loadNextLocations();
+      }
+    }
+    );
+  }
+
+  onIonInfinite(ev: any) {
+    this.loadNextLocations();
+    setTimeout(() => {
+      (ev as InfiniteScrollCustomEvent).target.complete();
+    }, 500);
+  }
+
+}
 

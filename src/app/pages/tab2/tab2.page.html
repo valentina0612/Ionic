@@ -15,4 +15,7 @@
 
   <app-explore-container name="Locations page"></app-explore-container>
   <app-locations [locations]="locations"></app-locations>
+  <ion-infinite-scroll (ionInfinite)="onIonInfinite($event)">
+    <ion-infinite-scroll-content></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 </ion-content>
