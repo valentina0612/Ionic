@@ -17,26 +17,7 @@ export class Tab3Page {
     this.loadLikedCharacters();
   }
   
-  goToCharacterDetail(idPersonaje: number) {
-    console.log('idPersonaje', idPersonaje);
-    this.router.navigate([`/page2/${idPersonaje}`]);
-  }
-
   async loadLikedCharacters(){
       this.favoriteCharacters = this.storageService.localCharacters
-  }
-
-  // Método para verificar si un personaje está "liked"
-  isLiked(character:any): boolean {
-    if (this.storageService.characterInFavorites(character)) {
-      return true;
-    }else{
-      return false;
-    }
-  }
-
-  addFavorite(character: any) {
-    console.log('addFavorite', character);
-    this.storageService.addOrRemoveCharacter(character);
   }
 }
