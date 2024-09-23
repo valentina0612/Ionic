@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Page1Page } from './page1.page';
-
+import { ExploreContainerComponentModule } from '../../explore-container/explore-container.module';
 describe('Page1Page', () => {
   let component: Page1Page;
   let fixture: ComponentFixture<Page1Page>;

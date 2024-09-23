@@ -11,6 +11,6 @@
     </ion-toolbar>
   </ion-header>
 
-  <ion-searchbar animated="true" placeholder="Search a character or location"></ion-searchbar>
-  
+  <ion-searchbar animated="true" placeholder="Search a character" (ionInput)="onSearchInput($event)"></ion-searchbar>
+  <app-characters [characters]="characters" [titulo]="'Characters'" [subtitulo]="'Ricky and Morty'"></app-characters>
 </ion-content>
