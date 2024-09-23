@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
   selector: 'app-characters',
@@ -11,8 +12,8 @@ export class CharactersComponent  implements OnInit {
   @Input() characters: any[] = [];
   @Input() titulo: string = '';
   @Input() subtitulo: string = '';
-  likedPersonajes: Set<number> = new Set<number>();
-  constructor( public router:Router) {}
+
+  constructor( public router:Router, private storageService: StorageService) {}
 
   ngOnInit() {
 
@@ -21,18 +22,18 @@ export class CharactersComponent  implements OnInit {
     console.log('idPersonaje', idPersonaje);
     this.router.navigate([`/page2/${idPersonaje}`]);
   }
-  // Método para alternar el estado de "like" de un personaje
-  toggleLike(id: number) {
-    if (this.likedPersonajes.has(id)) {
-      this.likedPersonajes.delete(id);
-    } else {
-      this.likedPersonajes.add(id);
-    }
-    console.log('IDPERSONAJE:', id);
-  }
 
   // Método para verificar si un personaje está "liked"
-  isLiked(id: number): boolean {
-    return this.likedPersonajes.has(id);
+  isLiked(character:any): boolean {
+    if (this.storageService.characterInFavorites(character)) {
+      return true;
+    }else{
+      return false;
+    }
+  }
+
+  addFavorite(character: any) {
+    console.log('addFavorite', character);
+    this.storageService.addOrRemoveCharacter(character);
   }
 }
