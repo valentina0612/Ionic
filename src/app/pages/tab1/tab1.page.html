@@ -16,6 +16,7 @@
 
 
   <app-explore-container name="Characters page"></app-explore-container>
+  <ion-searchbar animated="true" placeholder="Search a character" (ionInput)="onSearchInput($event)"></ion-searchbar>
   <app-characters [characters]="characters" [titulo]="'Characters'" [subtitulo]="'Ricky and Morty'"></app-characters>
   <ion-infinite-scroll (ionInfinite)="onIonInfinite($event)">
     <ion-infinite-scroll-content></ion-infinite-scroll-content>

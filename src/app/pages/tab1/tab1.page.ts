@@ -49,6 +49,17 @@ export class Tab1Page {
     }
     );
   }
+
+  onSearchInput(event: any) {
+    const searchValue = event.target.value.toLowerCase();
+    if (searchValue === '') {;
+      return;
+    }
+    this.characters = this.characters.filter(character =>
+      character.name.toLowerCase().includes(searchValue)
+    );
+  }
+
   onIonInfinite(ev: any) {
     this.loadNextCharacters();
     setTimeout(() => {

@@ -34,6 +34,7 @@
           />
         </ion-thumbnail>
         <ion-label (click)="goToCharacterDetail(character.id)">{{character.name}}</ion-label>
+        <ion-label *ngIf="character.cordinates">{{ character.cordinates }}</ion-label>
         <ion-buttons>
           <ion-button  size="large" class="idButton" (click)="addFavorite(character)">
             <ion-icon [name]="isLiked(character) ? 'heart' : 'heart-outline'" slot="icon-only"></ion-icon>

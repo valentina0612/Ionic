@@ -33,6 +33,14 @@ export class RickyMortyBdService {
   );
 }
 
+  findCharacterByURL(url: string):any{
+    return this.http.get(url, {}).pipe(
+      map((res: any) => {
+        console.log('Character',res);
+        return res;
+      })
+    );
+  }
   getAllLocations():any{
     let url = `${URL_RM}/location`;
     return this.http.get(url, {}).pipe(

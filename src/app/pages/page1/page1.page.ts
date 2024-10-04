@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { RickyMortyBdService } from 'src/app/services/ricky-morty-bd.service';
-
+import { Barcode, BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
+import { AlertController } from '@ionic/angular';
+import { StorageService } from 'src/app/services/storage.service';
+import { Geolocation } from '@capacitor/geolocation';
+import { NativeGeocoder, NativeGeocoderResult, NativeGeocoderOptions } from '@ionic-native/native-geocoder/ngx';
 @Component({
   selector: 'app-page1',
   templateUrl: './page1.page.html',
@@ -8,29 +12,61 @@ import { RickyMortyBdService } from 'src/app/services/ricky-morty-bd.service';
 })
 export class Page1Page implements OnInit {
   characters: any[] = []
-  search: any;
+  isSupported = false;
+  barcodes: Barcode[] = [];
+  coordinates: any;
   
-  constructor(private bd: RickyMortyBdService) { }
+  constructor(private bd: RickyMortyBdService, private alertController: AlertController, private storageService: StorageService, private nativeGeocoder: NativeGeocoder) { }
 
-  ngOnInit() {
-    this.getCharacters()
+  async ngOnInit() {
+    await this.getScannedCharacters();
+    await this.locate();
+    BarcodeScanner.isSupported().then((result) => {
+      this.isSupported = result.supported;
+    });
+  }
+  async locate() {
+    const coordinates = await Geolocation.getCurrentPosition();
+    this.coordinates = coordinates.coords;
+    console.log('Current', this.coordinates);
   }
 
-  async getCharacters(){
-    await this.bd.getAllCharacters().toPromise().then((res: any) => {
-      this.characters = res.results
-    })
-  }
-
-  onSearchInput(event: any) {
-    const searchValue = event.target.value.toLowerCase();
-    if (searchValue === '') {
-      this.getCharacters();
+  async scan(): Promise<void> {
+    const granted = await this.requestPermissions();
+    if (!granted) {
+      this.presentAlert();
       return;
     }
-    this.characters = this.characters.filter(character =>
-      character.name.toLowerCase().includes(searchValue)
-    );
+    const { barcodes } = await BarcodeScanner.scan();
+    this.locate();
+    this.convertBarcodeToCharacter(barcodes[0]);
+    this.barcodes.push(...barcodes);
+  }
+
+  convertBarcodeToCharacter(barcode: Barcode) {
+    this.bd.findCharacterByURL(barcode.displayValue).toPromise().then((res: any) => {
+      console.log('Character',res);
+      this.characters.push(res);
+      this.storageService.addOrRemoveScannedCharacter(res);
+    });
+  }
+
+  async requestPermissions(): Promise<boolean> {
+    const { camera } = await BarcodeScanner.requestPermissions();
+    return camera === 'granted' || camera === 'limited';
+  }
+
+  async presentAlert(): Promise<void> {
+    const alert = await this.alertController.create({
+      header: 'Permission denied',
+      message: 'Please grant camera permission to use the barcode scanner.',
+      buttons: ['OK'],
+    });
+    await alert.present();
+  }
+
+  async getScannedCharacters() {
+    this.characters = this.storageService.scannedCharacters;
   }
 
 }

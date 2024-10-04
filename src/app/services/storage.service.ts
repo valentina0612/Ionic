@@ -8,6 +8,7 @@ import { Storage } from '@ionic/storage-angular';
 export class StorageService {
   private _storage: Storage | null = null;
   private _localCharacters: any[] = [];
+  private _scannedCharacters: any[] = [];
 
   constructor(private storage: Storage) {
     this.init();
@@ -18,6 +19,7 @@ export class StorageService {
     const storage = await this.storage.create();
     this._storage = storage;
     await this.loadFavoriteCharacters();
+    await this.loadScannedCharacters();
   }
 
   // Create and expose methods that users of this service can
@@ -31,6 +33,10 @@ export class StorageService {
     
   }
 
+  get scannedCharacters(): any[] {
+    return this._scannedCharacters;
+  }
+
   async loadFavoriteCharacters() {
     try{
       const characters = await this._storage?.get('favoriteCharacters');
@@ -40,7 +46,28 @@ export class StorageService {
       console.error('Error loading characters', error);
     }
   }
+  async loadScannedCharacters() {
+    try{
+      const characters = await this._storage?.get('scannedCharacters');
+      this._scannedCharacters = characters || [];
+      console.log( "local", this._localCharacters)
+    } catch (error) {
+      console.error('Error loading characters', error);
+    }
+  }
 
+  addOrRemoveScannedCharacter(character: any) {
+    const exits = this._scannedCharacters.find((localChar: any) => localChar.id === character.id);
+    if (!exits) {
+      this._scannedCharacters = [character, ...this._scannedCharacters];
+    }
+    this._storage?.set('scannedCharacters', this._scannedCharacters);
+  }
+
+  characterScanned(character: any) {
+    return this._scannedCharacters.find((localChar: any) => localChar.id === character.id);
+  }
+  
   characterInFavorites(character: any) {
     return this._localCharacters.find((localChar: any) => localChar.id === character.id);
   }
