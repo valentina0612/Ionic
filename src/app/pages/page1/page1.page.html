@@ -18,7 +18,6 @@
       <ion-input type="text" [value]="barcode.rawValue"></ion-input>
     </ion-item>
   </ion-list>
-  <ion-title>{{coordinates}}</ion-title>
   <ion-fab slot="fixed" vertical="bottom" horizontal="end">
     <ion-fab-button (click)="scan()" [disabled]="!isSupported">
       <ion-icon name="scan"></ion-icon>

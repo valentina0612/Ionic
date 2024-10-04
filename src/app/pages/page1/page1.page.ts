@@ -4,7 +4,6 @@ import { Barcode, BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
 import { AlertController } from '@ionic/angular';
 import { StorageService } from 'src/app/services/storage.service';
 import { Geolocation } from '@capacitor/geolocation';
-import { NativeGeocoder, NativeGeocoderResult, NativeGeocoderOptions } from '@ionic-native/native-geocoder/ngx';
 @Component({
   selector: 'app-page1',
   templateUrl: './page1.page.html',
@@ -16,15 +15,15 @@ export class Page1Page implements OnInit {
   barcodes: Barcode[] = [];
   coordinates: any;
   
-  constructor(private bd: RickyMortyBdService, private alertController: AlertController, private storageService: StorageService, private nativeGeocoder: NativeGeocoder) { }
+  constructor(private bd: RickyMortyBdService, private alertController: AlertController, private storageService: StorageService) { }
 
   async ngOnInit() {
     await this.getScannedCharacters();
-    await this.locate();
     BarcodeScanner.isSupported().then((result) => {
       this.isSupported = result.supported;
     });
   }
+
   async locate() {
     const coordinates = await Geolocation.getCurrentPosition();
     this.coordinates = coordinates.coords;
@@ -38,9 +37,8 @@ export class Page1Page implements OnInit {
       return;
     }
     const { barcodes } = await BarcodeScanner.scan();
-    this.locate();
-    this.convertBarcodeToCharacter(barcodes[0]);
     this.barcodes.push(...barcodes);
+    this.convertBarcodeToCharacter(this.barcodes[this.barcodes.length - 1]);
   }
 
   convertBarcodeToCharacter(barcode: Barcode) {
