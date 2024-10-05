@@ -8,7 +8,7 @@ import { Storage } from '@ionic/storage-angular';
 export class StorageService {
   private _storage: Storage | null = null;
   private _localCharacters: any[] = [];
-  private _scannedCharacters: any[] = [];
+  private _scannedCharacters: {character: any, coords:any, timestamp:any }[] = [];
 
   constructor(private storage: Storage) {
     this.init();

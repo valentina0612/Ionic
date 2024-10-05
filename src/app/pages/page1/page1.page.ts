@@ -10,7 +10,7 @@ import { Geolocation } from '@capacitor/geolocation';
   styleUrls: ['./page1.page.scss'],
 })
 export class Page1Page implements OnInit {
-  characters: any[] = []
+  characters: { character: any, coords: any, timestamp: any }[] = [];
   isSupported = false;
   barcodes: Barcode[] = [];
   coordinates: any;
@@ -26,9 +26,10 @@ export class Page1Page implements OnInit {
 
   async locate() {
     const coordinates = await Geolocation.getCurrentPosition();
-    this.coordinates = coordinates.coords;
-    console.log('Current', this.coordinates);
-  }
+    return coordinates;
+    
+}
+
 
   async scan(): Promise<void> {
     const granted = await this.requestPermissions();
@@ -41,11 +42,13 @@ export class Page1Page implements OnInit {
     this.convertBarcodeToCharacter(this.barcodes[this.barcodes.length - 1]);
   }
 
-  convertBarcodeToCharacter(barcode: Barcode) {
-    this.bd.findCharacterByURL(barcode.displayValue).toPromise().then((res: any) => {
+  async convertBarcodeToCharacter(barcode: Barcode) {
+    this.bd.findCharacterByURL(barcode.displayValue).toPromise().then(async (res: any) => {
       console.log('Character',res);
-      this.characters.push(res);
-      this.storageService.addOrRemoveScannedCharacter(res);
+      const coords = await this.locate();
+      const scannedCharacter = { character: res, coords: coords.coords, timestamp: coords.timestamp };
+      this.characters.push(scannedCharacter);
+      this.storageService.addOrRemoveScannedCharacter(scannedCharacter);
     });
   }
 
