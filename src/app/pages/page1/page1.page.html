@@ -11,7 +11,7 @@
     </ion-toolbar>
   </ion-header>
 
-  <ion-list *ngIf="characters.length!=0">
+  <ion-list>
     <ion-item *ngFor="let character of characters">
       <ion-thumbnail slot="start">
         <img alt="Silhouette of mountains"
@@ -22,7 +22,12 @@
       <ion-label>{{ character.coords }}</ion-label>
     </ion-item>
   </ion-list>
-
+  <ion-list>
+    <ion-item *ngFor="let barcode of barcodes">
+      <ion-label position="stacked">{{ barcode.format }}</ion-label>
+      <ion-input type="text" [value]="barcode.rawValue"></ion-input>
+    </ion-item>
+  </ion-list>
   <ion-fab slot="fixed" vertical="bottom" horizontal="end">
     <ion-fab-button (click)="scan()" [disabled]="!isSupported">
       <ion-icon name="scan"></ion-icon>
