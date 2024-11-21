@@ -13,14 +13,6 @@
     </ion-toolbar>
   </ion-header>
   
-  <ion-list>
-    <ion-item>
-      <ion-select label="Sorted by" placeholder="Sorted by">
-        <ion-select-option value="lastest">Latest</ion-select-option>
-        <ion-select-option value="oldest">Earliest</ion-select-option>
-      </ion-select>
-    </ion-item>
-  </ion-list>
   
-  <app-characters [characters]="favoriteCharacters" [titulo]="'Characters'" [subtitulo]="'Ricky and Morty'"></app-characters>
+  <app-characters [characters]="favoriteCharacters" [titulo]="'Favorite Characters'" [subtitulo]="'Ricky and Morty'"></app-characters>
 </ion-content>

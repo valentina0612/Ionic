@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
 import { StorageService } from 'src/app/services/storage.service';
 
@@ -16,8 +16,9 @@ export class CharactersComponent  implements OnInit {
   constructor( public router:Router, private storageService: StorageService) {}
 
   ngOnInit() {
-
   }
+
+
   goToCharacterDetail(idPersonaje: number) {
     console.log('idPersonaje', idPersonaje);
     this.router.navigate([`/page2/${idPersonaje}`]);
@@ -36,4 +37,5 @@ export class CharactersComponent  implements OnInit {
     console.log('addFavorite', character);
     this.storageService.addOrRemoveCharacter(character);
   }
+
 }

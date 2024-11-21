@@ -52,12 +52,14 @@ export class Tab1Page {
 
   onSearchInput(event: any) {
     const searchValue = event.target.value.toLowerCase();
-    if (searchValue === '') {;
+    if (searchValue === '') {
+      this.loadCharacters();
       return;
     }
     this.characters = this.characters.filter(character =>
       character.name.toLowerCase().includes(searchValue)
     );
+    return;
   }
 
   onIonInfinite(ev: any) {

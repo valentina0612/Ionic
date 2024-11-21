@@ -24,6 +24,10 @@ const routes: Routes = [
         loadChildren: () => import('../page1/page1.module').then( m => m.Page1PageModule)
       },
       {
+        path: 'ranking',
+        loadChildren: () => import('../ranking/ranking.module').then( m => m.RankingPageModule)
+      },
+      {
         path: '',
         redirectTo: '/tabs/tab1',
         pathMatch: 'full'
