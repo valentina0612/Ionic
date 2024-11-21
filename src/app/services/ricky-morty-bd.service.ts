@@ -63,9 +63,7 @@ export class RickyMortyBdService {
 
   async getCharactersByLocation(name:any, allCharacters:any){
     let charactersOrigin: any[] = []
-    await this.getAllCharacters().toPromise().then((res: any) => {
-      allCharacters = res.results
-    })
+    
     for (let character of allCharacters) {
       if(character.origin.name === name){
         charactersOrigin.push(character)

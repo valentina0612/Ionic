@@ -30,6 +30,10 @@ const routes: Routes = [
   {
     path: 'create-user',
     loadChildren: () => import('./pages/create-user/create-user.module').then( m => m.CreateUserPageModule)
+  },
+  {
+    path: 'auction',
+    loadChildren: () => import('./pages/auction/auction.module').then( m => m.AuctionPageModule)
   }
 ];
 @NgModule({
