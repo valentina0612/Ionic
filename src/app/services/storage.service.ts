@@ -1,24 +1,27 @@
 import { Injectable } from '@angular/core';
-
+import { FavoriteDto } from '../model/favorite.dto';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { Storage } from '@ionic/storage-angular';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class StorageService {
+  private apiURLBack = 'http://localhost:3000';
+  private _localCharacters: FavoriteDto[] = [];
   private _storage: Storage | null = null;
-  private _localCharacters: any[] = [];
   private _scannedCharacters: {character: any, coords:{lat:any,lng:any}, date: any, time:any}[] = [];
 
-  constructor(private storage: Storage) {
+  constructor(private http: HttpClient, private storage: Storage) {
     this.init();
   }
 
   async init() {
     // If using, define drivers here: await this.storage.defineDriver(/*...*/);
     const storage = await this.storage.create();
-    this._storage = storage;
-    await this.loadFavoriteCharacters();
+    this._storage = this.storage;
     await this.loadScannedCharacters();
   }
 
@@ -28,7 +31,7 @@ export class StorageService {
     this._storage?.set(key, value);
   }
 
-  get localCharacters(): any[] {
+  get localCharacters(): FavoriteDto[] {
     return this._localCharacters;
     
   }
@@ -37,15 +40,16 @@ export class StorageService {
     return this._scannedCharacters;
   }
 
-  async loadFavoriteCharacters() {
+  async loadFavoriteCharacters(userId: string) {
     try{
-      const characters = await this._storage?.get('favoriteCharacters');
-      this._localCharacters = characters || [];
-      console.log( "local", this._localCharacters)
+      const response = await this.http.get<FavoriteDto[]>(`${this.apiURLBack}/Favorite/user/${userId}`).toPromise();
+      this._localCharacters = response || [];
+      console.log( "Fetched characters from backend:", this._localCharacters)
     } catch (error) {
-      console.error('Error loading characters', error);
+      console.error('Error loading characters from backend', error);
     }
   }
+
   async loadScannedCharacters() {
     try{
       const characters = await this._storage?.get('scannedCharacters');
@@ -68,17 +72,27 @@ export class StorageService {
     return this._scannedCharacters.find((localChar: any) => localChar.id === character.id);
   }
   
-  characterInFavorites(character: any) {
-    return this._localCharacters.find((localChar: any) => localChar.id === character.id);
+  characterInFavorites(characterId: number) : FavoriteDto | undefined {
+    return this._localCharacters.find((localChar: any) => localChar.id === characterId);
   }
 
-  addOrRemoveCharacter(character: any) {
-    const exits = this._localCharacters.find((localChar: any) => localChar.id === character.id);
-    if (exits) {
-      this._localCharacters = this._localCharacters.filter((localChar: any) => localChar.id !== character.id);
-    } else {
-      this._localCharacters = [character, ...this._localCharacters];
+  async addOrRemoveCharacter(characterId: number, userId: string) {
+    try{
+      const exists = this.characterInFavorites(characterId);
+      if (exists) {
+        // Eliminar el favorito
+        await this.http.delete(`${this.apiURLBack}/Favorite/${exists.id}`).toPromise();
+        this._localCharacters = this._localCharacters.filter((char) => char.characterId !== characterId);
+      } else {
+        // Agregar el favorito
+        const newFavorite: FavoriteDto = await this.http
+          .post<FavoriteDto>(`${this.apiURLBack}/Favorite`, { characterId, userId })
+          .toPromise();
+        this._localCharacters = [newFavorite, ...this._localCharacters];
+      }
+      console.log('Updated favorites:', this._localCharacters);
+    }catch(error){
+      console.error('Error adding or removing character', error);
     }
-    this._storage?.set('favoriteCharacters', this._localCharacters);
   }
 }
