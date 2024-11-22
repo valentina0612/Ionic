@@ -1,5 +1,6 @@
 import { Component, Input, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from 'src/app/services/auth.service';
 import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
@@ -13,7 +14,7 @@ export class CharactersComponent  implements OnInit {
   @Input() titulo: string = '';
   @Input() subtitulo: string = '';
 
-  constructor( public router:Router, private storageService: StorageService) {}
+  constructor( public router:Router, private storageService: StorageService, private authService: AuthService) {}
 
   ngOnInit() {
   }
@@ -26,16 +27,16 @@ export class CharactersComponent  implements OnInit {
 
   // Método para verificar si un personaje está "liked"
   isLiked(character:any): boolean {
-    if (this.storageService.characterInFavorites(character)) {
+    if (this.storageService.characterInFavorites(character.id)) {
       return true;
     }else{
       return false;
     }
   }
 
-  addFavorite(character: any) {
-    console.log('addFavorite', character);
-    this.storageService.addOrRemoveCharacter(character, "6738d70fefc164b18d39b28b");
+  addFavorite(characterId: number) {
+    const userId = this.authService.idUserLogged();
+    this.storageService.addOrRemoveCharacter(characterId, userId);
   }
 
 }
