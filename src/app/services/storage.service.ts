@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FavoriteDto } from '../model/favorite.dto';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
 import { Storage } from '@ionic/storage-angular';
 
 
