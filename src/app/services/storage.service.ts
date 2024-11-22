@@ -3,6 +3,8 @@ import { FavoriteDto } from '../model/favorite.dto';
 import { HttpClient } from '@angular/common/http';
 import { Storage } from '@ionic/storage-angular';
 import { URL_SERVICIOS } from '../config/url.servicios';
+import { AuthService } from './auth.service';
+import { RickyMortyBdService } from './ricky-morty-bd.service';
 
 
 @Injectable({
@@ -14,7 +16,7 @@ export class StorageService {
   private _storage: Storage | null = null;
   private _scannedCharacters: {character: any, coords:{lat:any,lng:any}, date: any, time:any}[] = [];
 
-  constructor(private http: HttpClient, private storage: Storage) {
+  constructor(private http: HttpClient, private storage: Storage, private authService: AuthService, private bd: RickyMortyBdService) {
     this.init();
   }
 
@@ -22,6 +24,7 @@ export class StorageService {
     // If using, define drivers here: await this.storage.defineDriver(/*...*/);
     const storage = await this.storage.create();
     this._storage = this.storage;
+    await this.loadFavoriteCharacters(this.authService.idUserLogged());
     await this.loadScannedCharacters();
   }
 
@@ -44,6 +47,11 @@ export class StorageService {
     try{
       const response = await this.http.get<any>(`${this.apiURLBack}/Favorite/user/${userId}`).toPromise();
       this._localCharacters = response.favorite || [];
+      for (let i = 0; i < this._localCharacters.length; i++) {
+          const favorite = this._localCharacters[i];
+          const character = await this.bd.getCharacter(favorite.characterId).toPromise();
+          this._localCharacters[i]= character;
+      }
       console.log( "Fetched characters from backend:", this._localCharacters)
     } catch (error) {
       console.error('Error loading characters from backend', error);
@@ -82,21 +90,20 @@ export class StorageService {
       const exists = this.characterInFavorites(characterId);
       if (exists) {
         // Eliminar el favorito
-        await this.http.delete(`${this.apiURLBack}/Favorite/${userId}`).toPromise();
-        this._localCharacters = this._localCharacters.filter((char) => char.characterId != characterId);
+        await this.http.delete(`${this.apiURLBack}/Favorite/${characterId}/${userId}`).toPromise();
       } else {
         // Agregar el favorito
         const newFavorite = await this.http
           .post<FavoriteDto>(`${this.apiURLBack}/Favorite`, { characterId, user: { _id: userId }})
           .toPromise();
         if (newFavorite) {
-          this._localCharacters = [newFavorite, ...this._localCharacters];
+          this._localCharacters = await this.loadFavoriteCharacters(userId);
         } else {
           throw new Error('Failed to add new favorite');
         }
-        this._localCharacters = [newFavorite, ...this._localCharacters];
       }
       console.log('Updated favorites:', this._localCharacters);
+      this._localCharacters = await this.loadFavoriteCharacters(userId);
     }catch(error){
       console.error('Error adding or removing character', error);
     }

@@ -41,7 +41,7 @@ export class CreateUserPage implements OnInit {
       };
       const response = await this.userService.createUser(user);
       if (response) {
-        this.login();
+        this.login(response._id);
       }
       else{
         console.log('Error creating user');
@@ -49,8 +49,8 @@ export class CreateUserPage implements OnInit {
     }
   }
 
-  login(): void {
-    this.authService.login();
+  login(idUser:string): void {
+    this.authService.login(idUser);
     this.router.navigate(['/tabs']);
   }
 }

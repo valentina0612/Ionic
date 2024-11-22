@@ -30,7 +30,7 @@ export class LoginPage implements OnInit {
   async login() {
     const user = await this.userService.login(this.username, this.password);
     if (user) {
-      this.authService.login();
+      this.authService.login(user._id);
       this.router.navigate(['/tabs']);
     }
     else{
