@@ -9,7 +9,7 @@ import { Storage } from '@ionic/storage-angular';
   providedIn: 'root'
 })
 export class StorageService {
-  private apiURLBack = 'http://localhost:3000';
+  private apiURLBack = 'https://backendrickymorty.onrender.com/api';
   private _localCharacters: FavoriteDto[] = [];
   private _storage: Storage | null = null;
   private _scannedCharacters: {character: any, coords:{lat:any,lng:any}, date: any, time:any}[] = [];
@@ -42,12 +42,13 @@ export class StorageService {
 
   async loadFavoriteCharacters(userId: string) {
     try{
-      const response = await this.http.get<FavoriteDto[]>(`${this.apiURLBack}/Favorite/user/${userId}`).toPromise();
-      this._localCharacters = response || [];
+      const response = await this.http.get<any>(`${this.apiURLBack}/Favorite/user/${userId}`).toPromise();
+      this._localCharacters = response.favorite || [];
       console.log( "Fetched characters from backend:", this._localCharacters)
     } catch (error) {
       console.error('Error loading characters from backend', error);
     }
+    return this._localCharacters;
   }
 
   async loadScannedCharacters() {
@@ -81,13 +82,18 @@ export class StorageService {
       const exists = this.characterInFavorites(characterId);
       if (exists) {
         // Eliminar el favorito
-        await this.http.delete(`${this.apiURLBack}/Favorite/${exists.id}`).toPromise();
-        this._localCharacters = this._localCharacters.filter((char) => char.characterId !== characterId);
+        await this.http.delete(`${this.apiURLBack}/Favorite/${userId}`).toPromise();
+        this._localCharacters = this._localCharacters.filter((char) => char.characterId != characterId);
       } else {
         // Agregar el favorito
-        const newFavorite: FavoriteDto = await this.http
-          .post<FavoriteDto>(`${this.apiURLBack}/Favorite`, { characterId, userId })
+        const newFavorite = await this.http
+          .post<FavoriteDto>(`${this.apiURLBack}/Favorite`, { characterId, user: { _id: userId }})
           .toPromise();
+        if (newFavorite) {
+          this._localCharacters = [newFavorite, ...this._localCharacters];
+        } else {
+          throw new Error('Failed to add new favorite');
+        }
         this._localCharacters = [newFavorite, ...this._localCharacters];
       }
       console.log('Updated favorites:', this._localCharacters);

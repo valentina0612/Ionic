@@ -35,7 +35,7 @@ export class CharactersComponent  implements OnInit {
 
   addFavorite(character: any) {
     console.log('addFavorite', character);
-    this.storageService.addOrRemoveCharacter(character);
+    this.storageService.addOrRemoveCharacter(character, "6738d70fefc164b18d39b28b");
   }
 
 }
