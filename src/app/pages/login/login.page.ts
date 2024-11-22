@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
+import { UserService } from 'src/app/services/user.service';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-login',
@@ -8,16 +10,33 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit {
-  [x: string]: any;
+  username: string = '';
+  password: string = '';
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(private authService: AuthService, private router: Router, private userService: UserService, private alertController: AlertController) { }
 
   ngOnInit() {
   }
 
-  login() {
-    this.authService.login(); // Cambia el estado a autenticado
-    this.router.navigate(['/tabs']);
+  async showAlert() {
+    const alert = await this.alertController.create({
+      header: 'Error',
+      subHeader: 'Your username or password is incorrect',
+      buttons: ['OK'],
+    });
+    await alert.present();
+  }
+
+  async login() {
+    const user = await this.userService.login(this.username, this.password);
+    if (user) {
+      this.authService.login();
+      this.router.navigate(['/tabs']);
+    }
+    else{
+      console.log('Invalid username or password');
+      this.showAlert();
+    }
   }
 
   createAccount() {

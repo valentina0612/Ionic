@@ -10,30 +10,30 @@
 
       <ion-item class="loginItem">
         <ion-label class="ionLabel" position="floating">Email</ion-label>
-        <ion-input class="ionInput" type="email"></ion-input>
+        <ion-input class="ionInput" type="email" [(ngModel)]="email"></ion-input>
       </ion-item>
 
       <ion-item class="loginItem">
         <ion-label class="ionLabel" position="floating">Username</ion-label>
-        <ion-input class="ionInput"></ion-input>
+        <ion-input class="ionInput" type="text" [(ngModel)]="username"></ion-input>
       </ion-item>
 
       <ion-item class="loginItem">
         <ion-label class="ionLabel" position="floating">First name</ion-label>
-        <ion-input class="ionInput"></ion-input>
+        <ion-input class="ionInput" type="text" [(ngModel)]="firstName"></ion-input>
       </ion-item>
 
       <ion-item class="loginItem">
         <ion-label class="ionLabel" position="floating">Last name</ion-label>
-        <ion-input class="ionInput"></ion-input>
+        <ion-input class="ionInput" type="text" [(ngModel)]="lastName"></ion-input>
       </ion-item>
 
       <ion-item class="loginItem">
         <ion-label class="ionLabel" position="floating">Password</ion-label>
-        <ion-input class="ionInput" type="password"></ion-input>
+        <ion-input class="ionInput" type="password" [(ngModel)]="password"></ion-input>
       </ion-item>
       
-      <ion-button class="loginButton" expand="block" (click)="login()">Sign in</ion-button>
+      <ion-button class="loginButton" expand="block" (click)="createUser()" [disabled]="!isFormValid()">Sign in</ion-button>
     </div>
   </div>
 </ion-content>

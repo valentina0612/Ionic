@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { FavoriteDto } from '../model/favorite.dto';
 import { HttpClient } from '@angular/common/http';
 import { Storage } from '@ionic/storage-angular';
+import { URL_SERVICIOS } from '../config/url.servicios';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class StorageService {
-  private apiURLBack = 'https://backendrickymorty.onrender.com/api';
+  private apiURLBack = URL_SERVICIOS;
   private _localCharacters: FavoriteDto[] = [];
   private _storage: Storage | null = null;
   private _scannedCharacters: {character: any, coords:{lat:any,lng:any}, date: any, time:any}[] = [];
