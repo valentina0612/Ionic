@@ -1,25 +1,3 @@
-<ion-accordion-group [multiple]="true" [value]="['first', 'third']">
-  <ion-accordion value="status">
-    <ion-item slot="header" color="light">
-      <ion-label>Status</ion-label>
-    </ion-item>
-    <div class="ion-padding" slot="content"><ion-checkbox>Alive</ion-checkbox></div>
-    <div class="ion-padding" slot="content"><ion-checkbox>Dead</ion-checkbox></div>
-    <div class="ion-padding" slot="content"><ion-checkbox>Unknown</ion-checkbox></div>
-    <ion-checkbox></ion-checkbox>
-  </ion-accordion>
-
-  <ion-accordion value="gender">
-    <ion-item slot="header" color="light">
-      <ion-label>Gender</ion-label>
-    </ion-item>
-    <div class="ion-padding" slot="content"><ion-checkbox>Femele</ion-checkbox></div>
-    <div class="ion-padding" slot="content"><ion-checkbox>Male</ion-checkbox></div>
-    <div class="ion-padding" slot="content"><ion-checkbox>Genderless</ion-checkbox></div>
-    <div class="ion-padding" slot="content"><ion-checkbox>Unknown</ion-checkbox></div>
-  </ion-accordion>
-</ion-accordion-group>
-
 <ion-card *ngIf="characters!=undefined">
   <ion-card-header>
     <ion-card-title [textContent]="titulo"></ion-card-title>

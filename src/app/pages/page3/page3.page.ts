@@ -51,6 +51,7 @@ export class Page3Page implements OnInit {
       else{
         this.loadCharactersLocation();
       }
+      console.log('Characters origin', this.characters);
     }
     );
   }
@@ -58,7 +59,7 @@ export class Page3Page implements OnInit {
   async loadCharactersLocation() {
     console.log('locationName', this.locationName);
     this.characters = await this.bd.getCharactersByLocation(this.locationName, this.characters);
-    console.log('Characters', this.characters);
+    console.log('Characters of this location', this.characters);
     this.show = true;
   }
 }

@@ -1,0 +1,30 @@
+.background{
+    background: url('../../../media/background.jpg') no-repeat;
+    background-size: cover;
+}
+
+.login{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.loginItem{
+    margin-top: 20px;
+    position: relative;
+    width: 40%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    .loginItem__input{
+        width: 30%;
+        margin-top: 10px;
+    }
+}
+ion-button{
+    margin-top: 20px;
+    width: 30%;
+}

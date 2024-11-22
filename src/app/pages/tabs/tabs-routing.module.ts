@@ -24,6 +24,14 @@ const routes: Routes = [
         loadChildren: () => import('../page1/page1.module').then( m => m.Page1PageModule)
       },
       {
+        path: 'ranking',
+        loadChildren: () => import('../ranking/ranking.module').then( m => m.RankingPageModule)
+      },
+      {
+        path: 'auction',
+        loadChildren: () => import('../auction/auction.module').then( m => m.AuctionPageModule)
+      },
+      {
         path: '',
         redirectTo: '/tabs/tab1',
         pathMatch: 'full'
