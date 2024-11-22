@@ -17,7 +17,6 @@ export class StorageService {
   private _localCharacters: FavoriteDto[] = [];
   private _scannedCharacters: ObtainedDto[] = [];
   private _storage: Storage | null = null;
-  private _scannedCharacters: {character: any, coords:{lat:any,lng:any}, date: any, time:any}[] = [];
 
   constructor(private http: HttpClient, private storage: Storage, private authService: AuthService, private bd: RickyMortyBdService) {
     this.init();
@@ -28,7 +27,7 @@ export class StorageService {
     const storage = await this.storage.create();
     this._storage = this.storage;
     await this.loadFavoriteCharacters(this.authService.idUserLogged());
-    await this.loadScannedCharacters();
+    await this.loadScannedCharacters(this.authService.idUserLogged());
   }
 
 
@@ -95,7 +94,7 @@ export class StorageService {
           user: { _id: userId, id: userId, username: '', firstName: '', lastName: '', email: '' },
         };
   
-        const response = await this.http.post(`${this.apiURLBack}/Obtained`, obtained).toPromise();
+        const response = await this.http.post<any>(`${this.apiURLBack}/Obtained`, obtained).toPromise();
         this._scannedCharacters = [
           {
             id: response._id,
