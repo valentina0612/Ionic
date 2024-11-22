@@ -1,5 +1,5 @@
 .background{
-    background: url('../../../media/background.jpg') no-repeat;
+    background: url('../../../media/background.png') no-repeat;
     background-size: cover;
 }
 
@@ -9,22 +9,61 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
+    
 }
 
 .loginItem{
     margin-top: 20px;
     position: relative;
-    width: 40%;
+    width: 70vw;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    .loginItem__input{
-        width: 30%;
-        margin-top: 10px;
-    }
+    --background: #d7dde4;
+    border-radius: 10px;
 }
-ion-button{
+.ionInput{
+    width: 100%;
+    margin-top: 10px;
+    color: #282b3e;
+    font-weight: bold;
+}
+
+.ionLabel{
+    font-size: 18px;
+    font-weight: bold;
+    color: #31385f;
+}
+
+.loginButton{
     margin-top: 20px;
-    width: 30%;
+    width: 45%;
+    --background: #31385f;
+    --border-radius: 10px;
+    --color: white;
+    --padding: 10px;
+    --margin: 10px;
+    --box-shadow: 0 10px 20px -10px rgba(49, 56, 95, 0.5);
+}
+
+.loginButton:hover{
+    --background: #2f365f;
+    --box-shadow: 0 10px 20px -10px rgba(49, 56, 95, 0.5);
+}
+
+.createButton{
+    margin-top: 20px;
+    width: 45%;
+    --background:#3489a0;
+    --border-radius: 10px;
+    --color: white;
+    --padding: 10px;
+    --margin: 10px;
+    --box-shadow: 0 10px 20px -10px rgba(49, 56, 95, 0.5);
+}
+
+.createButton:hover{
+    --background: #2f7386;
+    --box-shadow: 0 10px 20px -10px rgba(49, 56, 95, 0.5);
 }
