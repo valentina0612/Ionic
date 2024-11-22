@@ -4,7 +4,7 @@ export interface ObtainedDto{
     id: string;
     characterId: number;
     date: Date;
-    location: string;
+    location: { lat: number, lng: number };
     method: string;
     user: UserDto;
 }

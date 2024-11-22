@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { FavoriteDto } from '../model/favorite.dto';
+import { ObtainedDto } from '../model/obtained.dto';
 import { HttpClient } from '@angular/common/http';
 import { Storage } from '@ionic/storage-angular';
 import { URL_SERVICIOS } from '../config/url.servicios';
 import { AuthService } from './auth.service';
 import { RickyMortyBdService } from './ricky-morty-bd.service';
+
 
 
 @Injectable({
@@ -13,6 +15,7 @@ import { RickyMortyBdService } from './ricky-morty-bd.service';
 export class StorageService {
   private apiURLBack = URL_SERVICIOS;
   private _localCharacters: FavoriteDto[] = [];
+  private _scannedCharacters: ObtainedDto[] = [];
   private _storage: Storage | null = null;
   private _scannedCharacters: {character: any, coords:{lat:any,lng:any}, date: any, time:any}[] = [];
 
@@ -28,18 +31,13 @@ export class StorageService {
     await this.loadScannedCharacters();
   }
 
-  // Create and expose methods that users of this service can
-  // call, for example:
-  public set(key: string, value: any) {
-    this._storage?.set(key, value);
-  }
 
   get localCharacters(): FavoriteDto[] {
     return this._localCharacters;
     
   }
 
-  get scannedCharacters(): any[] {
+  get scannedCharacters(): ObtainedDto[] {
     return this._scannedCharacters;
   }
 
@@ -59,26 +57,67 @@ export class StorageService {
     return this._localCharacters;
   }
 
-  async loadScannedCharacters() {
+  async loadScannedCharacters(userId: string) {
     try{
-      const characters = await this._storage?.get('scannedCharacters');
-      this._scannedCharacters = characters || [];
+      const response = await this.http.get<any>(`${this.apiURLBack}/Obtained/${userId}`).toPromise();
+      this._scannedCharacters = response.map((obtained: any) => ({
+        id: obtained._id,
+        characterId: obtained.characterId,
+        location: obtained.location,
+        date: new Date(obtained.date),
+        method: obtained.method,
+        user: obtained.user
+      }));
       console.log( "local", this._localCharacters)
     } catch (error) {
       console.error('Error loading characters', error);
     }
   }
 
-  addOrRemoveScannedCharacter(character: any) {
-    const exits = this._scannedCharacters.find((localChar: any) => localChar.id === character.id);
-    if (!exits) {
-      this._scannedCharacters = [character, ...this._scannedCharacters];
+  async addOrRemoveScannedCharacter(characterId: number, userId: string, coords?: { lat: number, lng: number }) {
+    try {
+      const exists = this.characterScanned(characterId);
+  
+      if (exists) {
+        await this.http.delete(`${this.apiURLBack}/Obtained/${characterId}`).toPromise();
+        this._scannedCharacters = this._scannedCharacters.filter(char => char.characterId !== characterId);
+        console.log('Character removed from scanned list:', characterId);
+      } else {
+        if (!coords) {
+          throw new Error('Coordinates are required to add a scanned character.');
+        }
+  
+        const obtained = {
+          characterId: characterId,
+          date: new Date().toISOString(),
+          location: coords,
+          method: 'scan',
+          user: { _id: userId, id: userId, username: '', firstName: '', lastName: '', email: '' },
+        };
+  
+        const response = await this.http.post(`${this.apiURLBack}/Obtained`, obtained).toPromise();
+        this._scannedCharacters = [
+          {
+            id: response._id,
+            characterId: characterId,
+            location: coords,
+            date: new Date(obtained.date),
+            method: obtained.method,
+            user: obtained.user,
+          },
+          ...this._scannedCharacters,
+        ];
+        console.log('Character added to scanned list:', response);
+      }
+  
+      console.log('Updated scanned characters:', this._scannedCharacters)
+    } catch (error) {
+      console.error('Error in addOrRemoveScannedCharacter:', error);
     }
-    this._storage?.set('scannedCharacters', this._scannedCharacters);
   }
-
-  characterScanned(character: any) {
-    return this._scannedCharacters.find((localChar: any) => localChar.id === character.id);
+  
+  characterScanned(characterId: number) : ObtainedDto | undefined {
+    return this._scannedCharacters.find((localChar: any) => localChar.character.id === characterId) as ObtainedDto | undefined;
   }
   
   characterInFavorites(characterId: number) : FavoriteDto | undefined {
@@ -89,10 +128,8 @@ export class StorageService {
     try{
       const exists = this.characterInFavorites(characterId);
       if (exists) {
-        // Eliminar el favorito
         await this.http.delete(`${this.apiURLBack}/Favorite/${characterId}/${userId}`).toPromise();
       } else {
-        // Agregar el favorito
         const newFavorite = await this.http
           .post<FavoriteDto>(`${this.apiURLBack}/Favorite`, { characterId, user: { _id: userId }})
           .toPromise();
