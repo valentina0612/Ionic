@@ -7,7 +7,7 @@
 <ion-content [fullscreen]="true">
 
   <app-map [markers]="markers"></app-map>
-  <ion-list>
+  <ion-list *ngIf="characters.length!=0">
     <ion-item *ngFor="let character of characters">
       <ion-thumbnail slot="start">
         <img alt="Silhouette of mountains"

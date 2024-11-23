@@ -5,6 +5,7 @@ import { AlertController } from '@ionic/angular';
 import { StorageService } from 'src/app/services/storage.service';
 import { Geolocation } from '@capacitor/geolocation';
 import { ChangeDetectorRef } from '@angular/core';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-page1',
@@ -12,22 +13,21 @@ import { ChangeDetectorRef } from '@angular/core';
   styleUrls: ['./page1.page.scss'],
 })
 export class Page1Page implements OnInit {
-  characters: { character: any, coords: {lat:any,lng:any}, date: any, time:any }[] = [];
+  characters: any[] = [];
   isSupported = false;
   barcodes: Barcode[] = [];
   coordinates: any;
-  markers: {coordinate:any,title:any,snippet:any}[] = [];
+  markers: any[] = [];
   coords: any;
   
-  constructor(private bd: RickyMortyBdService, private alertController: AlertController, private storageService: StorageService, private cdr: ChangeDetectorRef) { }
+  constructor(private bd: RickyMortyBdService, private alertController: AlertController, private storageService: StorageService, private cdr: ChangeDetectorRef, private authService: AuthService) { }
 
   async ngOnInit() {
     await this.getScannedCharacters();
+    this.coords = await this.locate();
     BarcodeScanner.isSupported().then((result) => {
       this.isSupported = result.supported;
     });
-    this.coords = await this.locate();
-    
   }
 
   async locate() {
@@ -54,13 +54,11 @@ export class Page1Page implements OnInit {
       await this.saveCharacter(res);
     });
   }
+
   async saveCharacter(character: any) {
-    const dateTime = new Date(this.coords.timestamp);
-    const date = dateTime.toDateString();
-    const time = dateTime.toTimeString();
-    const scannedCharacter = { character: character, coords: {lat: this.coords.coords.latitude, lng:this.coords.coords.longitude}, date: date, time: time };
-    this.characters.push(scannedCharacter);
-    this.storageService.addOrRemoveScannedCharacter(scannedCharacter);
+    const coords = {lat: this.coords.coords.latitude, lng:this.coords.coords.longitude};
+    await this.storageService.addScannedCharacter(character.id, this.authService.idUserLogged(), coords);
+    this.getScannedCharacters();
   }
 
   async requestPermissions(): Promise<boolean> {
@@ -79,10 +77,18 @@ export class Page1Page implements OnInit {
 
   async getScannedCharacters() {
     this.characters = this.storageService.scannedCharacters;
-    this.markers = this.characters.map((character) => ({
-      coordinate: character.coords,
-      title: character.character.name,
-      snippet: character.character.species,
-    }));
+    for (let i = 0; i < this.characters.length; i++) {
+      const character = this.characters[i];
+      this.bd.getCharacter(character.characterId).toPromise().then((res: any) => {
+        this.characters[i].character = res;
+        this.characters[i].date = this.characters[i].date.toISOString().split('T')[0];
+        this.markers.push({coordinate: character.location, title: "hola", snippet: "que tal"});
+      }
+      );
+    }
+    console.log('Markers', this.markers);
   }
+  
+
+
 }

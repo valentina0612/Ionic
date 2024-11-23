@@ -6,6 +6,8 @@ import { Storage } from '@ionic/storage-angular';
 import { URL_SERVICIOS } from '../config/url.servicios';
 import { AuthService } from './auth.service';
 import { RickyMortyBdService } from './ricky-morty-bd.service';
+import { UserService } from './user.service';
+import { UserDto } from '../model/user.dto';
 
 
 
@@ -18,7 +20,7 @@ export class StorageService {
   private _scannedCharacters: ObtainedDto[] = [];
   private _storage: Storage | null = null;
 
-  constructor(private http: HttpClient, private storage: Storage, private authService: AuthService, private bd: RickyMortyBdService) {
+  constructor(private http: HttpClient, private storage: Storage, private authService: AuthService, private bd: RickyMortyBdService, private userService: UserService) {
     this.init();
   }
 
@@ -59,7 +61,8 @@ export class StorageService {
   async loadScannedCharacters(userId: string) {
     try{
       const response = await this.http.get<any>(`${this.apiURLBack}/Obtained/${userId}`).toPromise();
-      this._scannedCharacters = response.map((obtained: any) => ({
+      console.log('Response from backend:', response);
+      this._scannedCharacters = response.obtained.map((obtained: any) => ({
         id: obtained._id,
         characterId: obtained.characterId,
         location: obtained.location,
@@ -67,20 +70,18 @@ export class StorageService {
         method: obtained.method,
         user: obtained.user
       }));
-      console.log( "local", this._localCharacters)
+      console.log( "Obtained characters", this._scannedCharacters)
     } catch (error) {
       console.error('Error loading characters', error);
     }
   }
 
-  async addOrRemoveScannedCharacter(characterId: number, userId: string, coords?: { lat: number, lng: number }) {
+  async addScannedCharacter(characterId: number, userId: string, coords?: { lat: number, lng: number }) {
+    console.log('Adding scanned character:', characterId);
     try {
       const exists = this.characterScanned(characterId);
-  
       if (exists) {
-        await this.http.delete(`${this.apiURLBack}/Obtained/${characterId}`).toPromise();
-        this._scannedCharacters = this._scannedCharacters.filter(char => char.characterId !== characterId);
-        console.log('Character removed from scanned list:', characterId);
+        console.log('You alredy have this character:', characterId);
       } else {
         if (!coords) {
           throw new Error('Coordinates are required to add a scanned character.');
@@ -88,24 +89,27 @@ export class StorageService {
   
         const obtained = {
           characterId: characterId,
-          date: new Date().toISOString(),
           location: coords,
-          method: 'scan',
-          user: { _id: userId, id: userId, username: '', firstName: '', lastName: '', email: '' },
+          method: 'captured',
+          user: { _id: userId },
         };
-  
+        console.log('Adding new character:', obtained);
         const response = await this.http.post<any>(`${this.apiURLBack}/Obtained`, obtained).toPromise();
-        this._scannedCharacters = [
-          {
-            id: response._id,
-            characterId: characterId,
-            location: coords,
-            date: new Date(obtained.date),
-            method: obtained.method,
-            user: obtained.user,
-          },
-          ...this._scannedCharacters,
-        ];
+        const user = await this.http.get<UserDto>(`${this.apiURLBack}/User/find/${userId}`).toPromise();
+        if (user) {
+          this._scannedCharacters = [
+            {
+              id: response._id,
+              characterId: characterId,
+              location: coords,
+              method: obtained.method,
+              user: user,
+            },
+            ...this._scannedCharacters,
+          ];
+        } else {
+          throw new Error('User not found');
+        }
         console.log('Character added to scanned list:', response);
       }
   
@@ -115,8 +119,8 @@ export class StorageService {
     }
   }
   
-  characterScanned(characterId: number) : ObtainedDto | undefined {
-    return this._scannedCharacters.find((localChar: any) => localChar.character.id === characterId) as ObtainedDto | undefined;
+  characterScanned(characterId: number){
+    return this._scannedCharacters.find((localChar: any) => localChar.characterId === characterId) as ObtainedDto | undefined;
   }
   
   characterInFavorites(characterId: number) : FavoriteDto | undefined {

@@ -29,11 +29,21 @@ async initializeMap() {
   await this.loadMarkers();
 }
   async addMarker(position: { lat: number; lng: number }, title?: string, snippet?: string) {
-    await this.map.addMarker({
+    const marker = await this.map.addMarker({
       coordinate: position,
       title: title,
       snippet: snippet,
     });
+    if (snippet) {
+      const infoWindow = new google.maps.InfoWindow({
+        content: `<div><strong>${title || ''}</strong><p>${snippet}</p></div>`, // Contenido del InfoWindow
+      });
+  
+      // Mostrar el InfoWindow al hacer clic en el marcador
+      marker.addListener("click", () => {
+        infoWindow.open(this.map, marker);
+      });
+    }
   }
   async loadMarkers() {
     this.markers.forEach(async (marker) => {
