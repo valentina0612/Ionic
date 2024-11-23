@@ -82,7 +82,7 @@ export class Page1Page implements OnInit {
       this.bd.getCharacter(character.characterId).toPromise().then((res: any) => {
         this.characters[i].character = res;
         this.characters[i].date = this.characters[i].date.toISOString().split('T')[0];
-        this.markers.push({coordinate: character.location, title: "hola", snippet: "que tal"});
+        this.markers.push({coordinate: character.location, title: res.name, snippet: this.characters[i].date});
       }
       );
     }

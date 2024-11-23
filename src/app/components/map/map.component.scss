@@ -17,14 +17,10 @@ capacitor-google-map {
   }
 }
 /* Global styles for transparency */
-html, body {
+.mapBackground {
   background: none !important; /* Ensure the body is transparent */
   height: 100%;
   margin: 0; /* Remove default margin */
-}
-
-ion-content {
-  --background:none; /* Set IonContent background to transparent */
 }
 
 

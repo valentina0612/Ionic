@@ -1,1 +1,11 @@
 
+ion-tab-bar {
+    display: flex;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  
+  ion-tab-button {
+    flex-shrink: 0; /* Evita que los botones se compriman */
+  }
+  

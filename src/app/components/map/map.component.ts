@@ -34,16 +34,6 @@ async initializeMap() {
       title: title,
       snippet: snippet,
     });
-    if (snippet) {
-      const infoWindow = new google.maps.InfoWindow({
-        content: `<div><strong>${title || ''}</strong><p>${snippet}</p></div>`, // Contenido del InfoWindow
-      });
-  
-      // Mostrar el InfoWindow al hacer clic en el marcador
-      marker.addListener("click", () => {
-        infoWindow.open(this.map, marker);
-      });
-    }
   }
   async loadMarkers() {
     this.markers.forEach(async (marker) => {
