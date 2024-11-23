@@ -2,13 +2,14 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { URL_SERVICIOS } from '../config/url.servicios';
 import { UserService } from './user.service';
+import { StorageService } from './storage.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuctionService {
 
-  constructor(private http: HttpClient, private storage: Storage, private userService: UserService) { }
+  constructor(private http: HttpClient, private storage: StorageService, private userService: UserService) { }
   apiURLAuctions = `${URL_SERVICIOS}/Auction`;
   apiObtainedCharacters = `${URL_SERVICIOS}/Obtained`;
 
@@ -107,6 +108,7 @@ export class AuctionService {
       };
       await this.updateAuction(updateAuction);
       const response = await this.http.post<any>(`${this.apiObtainedCharacters}/exchange`, {updateAuction}).toPromise();
+      this.storage.init();
       return response;
     } catch (error) {
       console.error('Error exchanging characters', error);
