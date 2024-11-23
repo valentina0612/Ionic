@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { AuthService } from 'src/app/services/auth.service';
 import { RickyMortyBdService } from 'src/app/services/ricky-morty-bd.service';
 
 @Component({
@@ -12,7 +13,7 @@ export class Page3Page implements OnInit {
   characters!:any[]
   url_next: string = '';
   show: boolean = false;
-  constructor(private activatedRoute:ActivatedRoute, private bd: RickyMortyBdService) { 
+  constructor(private activatedRoute:ActivatedRoute, private bd: RickyMortyBdService, private authService: AuthService) { 
     this.activatedRoute.params.subscribe(params => {
       this.locationName = params['locationName'];
       console.log('locationId', this.locationName);
@@ -61,5 +62,9 @@ export class Page3Page implements OnInit {
     this.characters = await this.bd.getCharactersByLocation(this.locationName, this.characters);
     console.log('Characters of this location', this.characters);
     this.show = true;
+  }
+
+  logOut() {
+    this.authService.logout();
   }
 }

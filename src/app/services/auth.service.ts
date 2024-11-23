@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage-angular';
 
 @Injectable({
@@ -8,7 +9,7 @@ export class AuthService {
   private loggedIn = false;
   private idUser = '';
   
-  constructor(private storage: Storage) {
+  constructor(private storage: Storage, private router: Router) {
     this.init();
   }
 
@@ -38,5 +39,6 @@ export class AuthService {
     this.loggedIn = false;
     this.idUser = '';
     this.storage.remove('idUser');
+    this.router.navigate(['/login']);
   }
 }

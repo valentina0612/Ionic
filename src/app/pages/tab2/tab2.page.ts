@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { InfiniteScrollCustomEvent } from '@ionic/angular';
+import { AuthService } from 'src/app/services/auth.service';
 import { RickyMortyBdService } from 'src/app/services/ricky-morty-bd.service';
 
 @Component({
@@ -11,7 +12,7 @@ export class Tab2Page {
 
   locations:any[] = [];
   next_url: string = '';
-  constructor(private bd:RickyMortyBdService) {
+  constructor(private bd:RickyMortyBdService, private authService: AuthService) {
 
   }
   ngOnInit() {
@@ -48,6 +49,11 @@ export class Tab2Page {
       (ev as InfiniteScrollCustomEvent).target.complete();
     }, 500);
   }
+
+  logOut() {
+    this.authService.logout();
+  }
+
 
 }
 

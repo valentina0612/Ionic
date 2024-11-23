@@ -88,6 +88,10 @@ export class Page1Page implements OnInit {
     }
     console.log('Markers', this.markers);
   }
+
+  logOut() {
+    this.authService.logout();
+  }
   
 
 

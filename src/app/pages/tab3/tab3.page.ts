@@ -12,7 +12,7 @@ import { StorageService } from 'src/app/services/storage.service';
 export class Tab3Page {
   favoriteCharacters: any[]=[];
 
-  constructor( public router:Router, private storageService: StorageService, private bd: RickyMortyBdService) {}
+  constructor( public router:Router, private storageService: StorageService, private bd: RickyMortyBdService, private authService: AuthService) {}
 
   async ngOnInit() {
     await this.loadLikedCharacters();
@@ -20,5 +20,9 @@ export class Tab3Page {
   
   async loadLikedCharacters(){
       this.favoriteCharacters = this.storageService.localCharacters;
+    }
+
+    logOut() {
+      this.authService.logout();
     }
   }

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { InfiniteScrollCustomEvent } from '@ionic/angular';
+import { AuthService } from 'src/app/services/auth.service';
 import { RickyMortyBdService } from 'src/app/services/ricky-morty-bd.service';
 
 @Component({
@@ -14,7 +15,7 @@ export class Tab1Page {
   url_next: string = '';  
 
   //La injeccion del servicio para traer los datos
-  constructor(private bd: RickyMortyBdService) {
+  constructor(private bd: RickyMortyBdService, private authService: AuthService) {
 
 
   }
@@ -68,4 +69,9 @@ export class Tab1Page {
       (ev as InfiniteScrollCustomEvent).target.complete();
     }, 500);
   }
+
+  logOut() {
+    this.authService.logout();
+  }
+  
 }

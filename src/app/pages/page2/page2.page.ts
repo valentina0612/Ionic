@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { AuthService } from 'src/app/services/auth.service';
 import { RickyMortyBdService } from 'src/app/services/ricky-morty-bd.service';
 
 @Component({
@@ -11,7 +12,7 @@ export class Page2Page implements OnInit {
 
   characterId!:number;
   character:any;
-  constructor(private activatedRoute:ActivatedRoute, private bd: RickyMortyBdService) { 
+  constructor(private activatedRoute:ActivatedRoute, private bd: RickyMortyBdService, private authService: AuthService) { 
     this.activatedRoute.params.subscribe(params => {
       this.characterId = params['id'];
       console.log('characterId', this.characterId);
@@ -26,5 +27,9 @@ export class Page2Page implements OnInit {
     await this.bd.getCharacter(this.characterId).toPromise().then((resp: any) => {
       this.character = resp;
     });
+  }
+
+  logOut() {
+    this.authService.logout();
   }
 }
