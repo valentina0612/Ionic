@@ -1,0 +1,11 @@
+.card {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 8px;
+    text-align: center;
+  
+    &.ring-2 {
+      border-width: 4px;
+    }
+  }
+  

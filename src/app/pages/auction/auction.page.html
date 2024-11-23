@@ -1,13 +1,108 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>auction</ion-title>
+    <ion-title>Auction</ion-title>
+    <ion-buttons slot="end">
+      <ion-button size="default" (click)="logOut()"><ion-icon slot="start" name="log-out-outline"></ion-icon> Log Out</ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">auction</ion-title>
+      <ion-title size="large">Auction</ion-title>
     </ion-toolbar>
   </ion-header>
+  
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Intercambio de Personajes</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  
+  <ion-content>
+    <ion-grid>
+      <ion-row>
+        <!-- Personajes Repetidos -->
+        <ion-col size="5">
+          <h2 class="ion-text-center">Personajes Repetidos</h2>
+          <ion-content>
+            <ion-grid>
+              <ion-row>
+                <ion-col
+                  size="6"
+                >
+                  <ion-card
+                    
+                  >
+                    <ion-card-header>
+                      <ion-card-title>Nombre Personaje</ion-card-title>
+                    </ion-card-header>
+                    <ion-card-content>
+                      <img [src]=""/>
+                    </ion-card-content>
+                  </ion-card>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-content>
+        </ion-col>
+  
+        <!-- Icono de intercambio -->
+        <ion-col size="2" class="ion-text-center">
+          <ion-icon name="swap-horizontal" size="large"></ion-icon>
+        </ion-col>
+  
+        <!-- Personajes Deseados -->
+        <ion-col size="5">
+          <h2 class="ion-text-center">Personajes Deseados</h2>
+          <ion-content>
+            <ion-grid>
+              <ion-row>
+                <ion-col
+                  size="6"
+                  
+                >
+                  <ion-card
+                   
+                  >
+                    <ion-card-header>
+                      <ion-card-title>Nombre Personaje </ion-card-title>
+                    </ion-card-header>
+                    <ion-card-content>
+                      <img [src]=""  />
+                    </ion-card-content>
+                  </ion-card>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-content>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  
+    <ion-footer>
+      <ion-toolbar>
+        <ion-row class="ion-align-items-center">
+          <ion-col>
+            <p>
+              Intercambiar: <strong>Nombre Personaje</strong>
+            </p>
+          </ion-col>
+          <ion-col>
+            <p>
+              Por: <strong>Nombre personaje</strong>
+            </p>
+          </ion-col>
+          <ion-col>
+            <ion-button
+              expand="block"
+            >
+              Proponer Intercambio
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-toolbar>
+    </ion-footer>
+  </ion-content>  
 </ion-content>
