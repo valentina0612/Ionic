@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Storage } from '@ionic/storage-angular';
 
 @Injectable({
   providedIn: 'root'
@@ -6,24 +7,36 @@ import { Injectable } from '@angular/core';
 export class AuthService {
   private loggedIn = false;
   private idUser = '';
-  constructor() {}
+  
+  constructor(private storage: Storage) {
+    this.init();
+  }
 
-  isLoggedIn(): boolean {
+  async init() {
+    await this.storage.create();
+    this.idUser = await this.storage.get('idUser');
+    }
+
+  async isLoggedIn(): Promise<boolean> {
+    this.idUser = await  this.storage.get('idUser')
+    this.loggedIn = this.idUser ? true : false;
     return this.loggedIn;
   }
 
-  idUserLogged(): string {
+    idUserLogged(): string {
     return this.idUser;
   }
   
-  login(idUser:string): void {
+  async login(idUser:string){
     this.loggedIn = true;
     this.idUser = idUser;
+    await this.storage.set('idUser', idUser);
     console.log('User logged in', this.idUser);
   }
 
   logout(): void {
     this.loggedIn = false;
     this.idUser = '';
+    this.storage.remove('idUser');
   }
 }

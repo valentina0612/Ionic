@@ -10,9 +10,11 @@ export class MapComponent implements OnInit {
   map: any;
   @Input() markers: any[] = [];
 
+
   async ngOnInit() {
     await this.initializeMap();
-}
+  }
+
 async initializeMap() {
   this.map = await GoogleMap.create({
     id: 'my-map', // ID del mapa
@@ -40,6 +42,7 @@ async initializeMap() {
       await this.addMarker(marker.coordinate, marker.title, marker.snippet);
     });
 }
+
 }
 
 
