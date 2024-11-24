@@ -85,6 +85,7 @@ export class StorageService {
     }
   }
 
+
   async addScannedCharacter(characterId: number, userId: string, coords?: { lat: number, lng: number }) {
     console.log('Adding scanned character:', characterId);
     try {
