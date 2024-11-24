@@ -16,7 +16,7 @@
   
   <ion-header>
     <ion-toolbar>
-      <ion-title>Intercambio de Personajes</ion-title>
+      <ion-title>Character Exchange</ion-title>
     </ion-toolbar>
   </ion-header>
   
@@ -25,7 +25,7 @@
       <ion-row>
         <!-- Personajes Escaneados -->
         <ion-col size="5">
-          <h2 class="ion-text-center">Personajes Escaneados</h2>
+          <h2 class="ion-text-center">Scanned characters</h2>
           <ion-content>
             <ion-grid>
               <ion-row>
@@ -51,7 +51,7 @@
   
         <!-- Personajes Deseados -->
         <ion-col size="5">
-          <h2 class="ion-text-center">Personajes Deseados</h2>
+          <h2 class="ion-text-center">Desired Characters</h2>
           <ion-content>
             <ion-grid>
               <ion-row>
@@ -77,18 +77,18 @@
         <ion-row class="ion-align-items-center">
           <ion-col>
             <p>
-              Intercambiar: <strong>{{selectedScannedCharacter?.name || 'Selecciona un personaje'}}</strong>
+              Exchange: <strong>{{selectedScannedCharacter?.name || 'Select a character'}}</strong>
             </p>
           </ion-col>
           <ion-col>
             <p>
-              Por: <strong>{{selectedDesiredCharacter?.name || 'Selecciona un personaje'}}</strong>
+              For: <strong>{{selectedDesiredCharacter?.name || 'Select a character'}}</strong>
             </p>
           </ion-col>
           <ion-col>
             <ion-button
               expand="block" (click)="proposeExchange()">
-              Proponer Intercambio
+              Propose Exchange
             </ion-button>
           </ion-col>
         </ion-row>
