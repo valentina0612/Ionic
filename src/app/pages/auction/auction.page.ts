@@ -4,6 +4,7 @@ import { AuctionService } from 'src/app/services/auction.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { RickyMortyBdService } from 'src/app/services/ricky-morty-bd.service';
 import { range } from 'rxjs';
+import { AlertController } from '@ionic/angular';
 
 
 @Component({
@@ -18,7 +19,7 @@ export class AuctionPage implements OnInit {
   selectedScannedCharacter : any;
   selectedDesiredCharacter : any;
 
-  constructor(private authService: AuthService, private auctionService: AuctionService, private storage: StorageService, private bd: RickyMortyBdService) { }
+  constructor(private authService: AuthService, private auctionService: AuctionService, private storage: StorageService, private bd: RickyMortyBdService, private alertController: AlertController) { }
 
   async ngOnInit() {
     await this.storage.init();
@@ -26,6 +27,15 @@ export class AuctionPage implements OnInit {
     this.loadDesiredCharacter();
     console.log('Desired Characters:', this.desiredCharacters);
     console.log('Scanned Characters:', this.scannedCharacters);
+  }
+
+  async showAlert(error: string) {
+    const alert = await this.alertController.create({
+      header: 'Error',
+      subHeader: error,
+      buttons: ['OK'],
+    });
+    await alert.present();
   }
 
   loadDesiredCharacter(){
@@ -57,15 +67,19 @@ export class AuctionPage implements OnInit {
           auctionCreator : {_id: userId},
           creatorId: userId
         };
-        console.log('Auction data:', auctionData);
         const response = await this.auctionService.createAuction(auctionData); 
-        console.log('Exchange proposed successfully:', response);
         await this.loadAuction();
+        if(response){
+          this.showAlert('Exchange proposed successfully');
+        }
+        else{
+          this.showAlert('Error proposing exchange. It is possible you have an active auction');
+        }
       }catch (error) {
-        console.error('Error proposing exchange', error);
+        this.showAlert(error as string);
       }
     } else{
-      alert('Selecciona ambos personajes para el intercambio.');
+      this.showAlert('You must select a character to exchange and a desired character');
     }
   }
 

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AlertController } from '@ionic/angular';
 import { AuctionService } from 'src/app/services/auction.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { RickyMortyBdService } from 'src/app/services/ricky-morty-bd.service';
@@ -11,10 +12,20 @@ import { StorageService } from 'src/app/services/storage.service';
 })
 export class SeeAuctionsPage implements OnInit {
   avaliableAuctions: any[] = [];
-  constructor(private authService: AuthService, private auctionService: AuctionService, private storage: StorageService, private bd: RickyMortyBdService) { }
+  loggedUserId: string = this.authService.idUserLogged();
+  constructor(private authService: AuthService, private auctionService: AuctionService, private storage: StorageService, private bd: RickyMortyBdService, private alertControler: AlertController) { }
 
   ngOnInit() {
     this.loadAuction();
+  }
+
+  async showAlert(error: string) {
+    const alert = await this.alertControler.create({
+      header: 'Error',
+      subHeader: error,
+      buttons: ['OK'],
+    });
+    await alert.present();
   }
 
   async loadAuction() {
@@ -40,7 +51,7 @@ export class SeeAuctionsPage implements OnInit {
     try{
       await this.auctionService.exchangeCharacters(auction, this.authService.idUserLogged());
     }catch (error){
-      console.error('Error saving auction', error);
+      this.showAlert('Error exchanging characters.');
     }
   }
 

@@ -1,0 +1,19 @@
+ion-label {
+    --white-space: nowrap;
+    --overflow: hidden;
+    --text-overflow: ellipsis;
+  }
+  @media (max-width: 576px) {
+    ion-label {
+      --font-size: 12px; /* Reducir el tamaño del texto */
+    }
+    ion-thumbnail {
+      --width: 40px; /* Reducir el tamaño de las miniaturas */
+    }
+
+    ion-item {
+        --overflow-x: auto;
+      }
+      
+  }
+  

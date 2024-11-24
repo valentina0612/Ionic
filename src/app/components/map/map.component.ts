@@ -10,6 +10,9 @@ export class MapComponent implements OnInit {
   map: any;
   @Input() markers: any[] = [];
 
+   ngOnDestroy() {
+    this.map.remove();
+  }
 
   async ngOnInit() {
     await this.initializeMap();

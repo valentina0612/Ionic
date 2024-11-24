@@ -23,7 +23,7 @@ export class RankingService {
 
       // Obtener todos los personajes obtenidos de todos los usuarios y guardarlos según el método
       for (const user of users) {
-        const captured = await this.http.get<any>(`${this.apiURLRanking}/user/${user._id}/method/captured`).toPromise();
+        const captured = await this.http.get<any>(`${this.apiURLRanking}/user/${user._id}/method/Captured`).toPromise();
         console.log('Obtained characters', captured);
         if (captured) {
           this.capturedCharacters.push({userId: user._id, username: user.username, captured: captured.obtained.length, allObtaineds: captured.obtained});

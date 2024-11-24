@@ -51,6 +51,18 @@ export class StorageService {
     return this.favoriteSubject.asObservable();
   }
 
+  getScannedCharacters$(): Observable<ObtainedDto[]> {
+    return new Observable<ObtainedDto[]>(observer => {
+      observer.next(this._scannedCharacters);
+    });
+  }
+
+  getExchangedCharacters$(): Observable<ObtainedDto[]> {
+    return new Observable<ObtainedDto[]>(observer => {
+      observer.next(this._exchangedCharacters);
+    });
+  }
+
   private updateFavoritesSubject() {
     this.favoriteSubject.next(this._localCharacters);
   }
@@ -118,7 +130,7 @@ export class StorageService {
         const obtained = {
           characterId: characterId,
           location: coords,
-          method: 'captured',
+          method: 'Captured',
           user: { _id: userId },
         };
         console.log('Adding new character:', obtained);

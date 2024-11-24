@@ -28,10 +28,6 @@ const routes: Routes = [
         loadChildren: () => import('../ranking/ranking.module').then( m => m.RankingPageModule)
       },
       {
-        path: 'see-auctions',
-        loadChildren: () => import('../see-auctions/see-auctions.module').then( m => m.SeeAuctionsPageModule)
-      },
-      {
         path: 'auction',
         loadChildren: () => import('../auction/auction.module').then( m => m.AuctionPageModule)
       },

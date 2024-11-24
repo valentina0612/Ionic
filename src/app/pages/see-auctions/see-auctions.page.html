@@ -46,9 +46,13 @@
           </ion-card-content>
           <ion-footer>
             <!-- Botón para realizar el intercambio -->
-            <ion-button expand="block" color="primary" (click)="exchange(auction.auction)">
-              Exchange
-            </ion-button>
+            <ion-button 
+            expand="block" 
+            color="primary" 
+            (click)="exchange(auction.auction)" 
+            [disabled]="auction.auction.creatorId === loggedUserId">
+            Exchange
+          </ion-button>          
           </ion-footer>
         </ion-card>
       </ion-col>

@@ -6,6 +6,7 @@ import { StorageService } from 'src/app/services/storage.service';
 import { Geolocation } from '@capacitor/geolocation';
 import { ChangeDetectorRef } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
+import { Subscription } from 'rxjs'
 
 @Component({
   selector: 'app-page1',
@@ -20,8 +21,19 @@ export class Page1Page implements OnInit {
   coordinates: any;
   markers: any[] = [];
   coords: any;
+  private scanned!: Subscription;
+  private exchanged!: Subscription;
   
   constructor(private bd: RickyMortyBdService, private alertController: AlertController, private storageService: StorageService, private cdr: ChangeDetectorRef, private authService: AuthService) { }
+
+  ngOnDestroy() {
+    if (this.scanned) {
+      this.scanned.unsubscribe();
+    }
+    if (this.exchanged) {
+      this.exchanged.unsubscribe();
+    }
+  }
 
   async ngOnInit() {
     BarcodeScanner.isSupported().then((result) => {
@@ -78,30 +90,77 @@ export class Page1Page implements OnInit {
   }
 
   async getScannedCharacters() {
-    this.characters = this.storageService.scannedCharacters;
-    for (let i = 0; i < this.characters.length; i++) {
-      const character = this.characters[i];
-      this.bd.getCharacter(character.characterId).toPromise().then((res: any) => {
-        this.characters[i].character = res;
-        this.characters[i].date = this.characters[i].date.toISOString().split('T')[0];
-        this.markers.push({coordinate: character.location, title: res.name, snippet: this.characters[i].date});
+    try {
+      // Suscripción al observable para obtener personajes escaneados
+      this.scanned = this.storageService.getScannedCharacters$().subscribe((data: any[]) => {
+        this.characters = data; 
+      });
+  
+      // Obtén los personajes almacenados directamente
+      this.characters = this.storageService.scannedCharacters;
+  
+      // Itera sobre los personajes y obtén su información
+      for (let character of this.characters) {
+        await this.updateCharacterData(character);
       }
-      );
+  
+      console.log('Markers', this.markers);
+    } catch (error) {
+      console.error('Error fetching scanned characters:', error);
     }
-    console.log('Markers', this.markers);
   }
+  
+  private async updateCharacterData(character: any) {
+    try {
+      const res: any = await this.bd.getCharacter(character.characterId).toPromise();
+  
+      character.character = res;
+      character.date = new Date(character.date).toISOString().split('T')[0];
+  
+      this.markers.push({
+        coordinate: character.location,
+        title: res.name,
+        snippet: character.date,
+      });
+    } catch (error) {
+      console.error(`Error updating character data for ID ${character.characterId}:`, error);
+    }
+  }
+  
 
   async getExchangedCharacters() {
-    this.exchangeCharacters = this.storageService.exchangedCharacters;
-    for (let i = 0; i < this.exchangeCharacters.length; i++) {
-      const character = this.exchangeCharacters[i];
-      this.bd.getCharacter(character.characterId).toPromise().then((res: any) => {
-        this.exchangeCharacters[i].character = res;
-        this.exchangeCharacters[i].date = this.exchangeCharacters[i].date.toISOString().split('T')[0];
-      }
-      );
+    try {
+      // Suscripción al observable para obtener personajes intercambiados
+      this.storageService.getExchangedCharacters$().subscribe((data) => {
+        this.exchangeCharacters = data;
+        this.processExchangedCharacters(); // Procesa los datos recibidos
+      });
+    } catch (error) {
+      console.error('Error fetching exchanged characters:', error);
     }
   }
+  
+  private async processExchangedCharacters() {
+    try {
+      for (let character of this.exchangeCharacters) {
+        await this.updateExchangedCharacterData(character);
+      }
+    } catch (error) {
+      console.error('Error processing exchanged characters:', error);
+    }
+  }
+  
+  private async updateExchangedCharacterData(character: any) {
+    try {
+      const res: any = await this.bd.getCharacter(character.characterId).toPromise();
+  
+      character.character = res;
+      character.date = new Date(character.date).toISOString().split('T')[0];
+    } catch (error) {
+      console.error(`Error updating exchanged character data for ID ${character.characterId}:`, error);
+    }
+  }
+  
 
   logOut() {
     this.authService.logout();
