@@ -15,6 +15,12 @@ capacitor-google-map {
   @media (min-width: 1025px) {
     height: 500px; // Altura específica para escritorios
   }
+
+  // Ajustes para el contenedor del mapa
+  .map-container {
+    width: 100%; // Hace que el contenedor del mapa ocupe todo el ancho del componente
+    height: 100%; // Hace que el contenedor del mapa ocupe todo el alto del componente
+  }
 }
 
 

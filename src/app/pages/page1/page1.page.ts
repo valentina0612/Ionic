@@ -23,11 +23,11 @@ export class Page1Page implements OnInit {
   constructor(private bd: RickyMortyBdService, private alertController: AlertController, private storageService: StorageService, private cdr: ChangeDetectorRef, private authService: AuthService) { }
 
   async ngOnInit() {
-    await this.getScannedCharacters();
-    this.coords = await this.locate();
     BarcodeScanner.isSupported().then((result) => {
       this.isSupported = result.supported;
     });
+    await this.getScannedCharacters();
+    this.coords = await this.locate();
   }
 
   async locate() {
