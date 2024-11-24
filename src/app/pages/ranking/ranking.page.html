@@ -14,121 +14,69 @@
     </ion-toolbar>
   </ion-header>
 
-  <ion-content>
     <ion-grid>
       <ion-row>
         <!-- Personajes Repetidos -->
         <ion-col size="6">
-          <h2 class="ion-text-center">Escaneados</h2>
-          <ion-content style="height: 100vh;">
+          <h2 class="ion-text-center">Scans</h2>
             <ion-grid>
               <ion-row>
                 <ion-col>
-                  <ion-card *ngFor="let user of rankingCaptured">
+                  <ion-card>
                     <ion-card-header>
-                      <ion-card-title>{{user.username}}</ion-card-title>
-                      <ion-card-title>{{user.captured}}</ion-card-title>
+                      <ion-card-title>Scanned Rankings</ion-card-title>
                     </ion-card-header>
                     <ion-card-content>
                       <ion-list>
-                        <ion-item>
+
+                        <ion-item *ngFor="let user of rankingCaptured">
                           <ion-thumbnail slot="start">
                             <img
                               alt="Silhouette of mountains"
-                              src="https://ionicframework.com/docs/img/demos/thumbnail.svg"
+                              src="https://i.pinimg.com/originals/6b/93/8f/6b938f3fe4db2c51e5820360106e032e.jpg"
                             />
                           </ion-thumbnail>
-                          <ion-label>Item</ion-label>
+                          <ion-label>{{user.username}}</ion-label>
+                          <ion-label slot="end">{{user.captured}}</ion-label>
                         </ion-item>
 
-                        <ion-item>
-                          <ion-thumbnail slot="start">
-                            <img
-                              alt="Silhouette of mountains"
-                              src="https://ionicframework.com/docs/img/demos/thumbnail.svg"
-                            />
-                          </ion-thumbnail>
-                          <ion-label>Item</ion-label>
-                        </ion-item>
-
-                        <ion-item>
-                          <ion-thumbnail slot="start">
-                            <img
-                              alt="Silhouette of mountains"
-                              src="https://ionicframework.com/docs/img/demos/thumbnail.svg"
-                            />
-                          </ion-thumbnail>
-                          <ion-label>Item</ion-label>
-                        </ion-item>
-
-                        <ion-item lines="none">
-                          <ion-thumbnail slot="start">
-                            <img
-                              alt="Silhouette of mountains"
-                              src="https://ionicframework.com/docs/img/demos/thumbnail.svg"
-                            />
-                          </ion-thumbnail>
-                          <ion-label>Item</ion-label>
-                        </ion-item>
                       </ion-list>
                     </ion-card-content>
                   </ion-card>
                 </ion-col>
               </ion-row>
             </ion-grid>
-          </ion-content>
         </ion-col>
 
         <!-- Personajes Deseados -->
         <ion-col size="6">
-          <h2 class="ion-text-center">Subasta</h2>
-          <ion-content style="height: 100vh;">
+          <h2 class="ion-text-center">Auctions</h2>
             <ion-grid>
               <ion-row>
                 <ion-col>
-                  <ion-card *ngFor="let user of rankingExchanged">
+                  <ion-card>
                     <ion-card-header>
-                      <ion-card-title>{{user.username}}</ion-card-title>
-                      <ion-card-subtitle>{{user.exchanged}}</ion-card-subtitle>
+                      <ion-card-title>Auctions Rankings</ion-card-title>
                     </ion-card-header>
                     <ion-card-content>
                       <ion-list>
-                        <ion-item>
+
+                        <ion-item *ngFor="let user of rankingExchanged">
                           <ion-thumbnail slot="start">
-                            <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
+                            <img alt="Silhouette of mountains" src="https://i.pinimg.com/originals/6b/93/8f/6b938f3fe4db2c51e5820360106e032e.jpg" />
                           </ion-thumbnail>
-                          <ion-label>Item</ion-label>
+                          <ion-label>{{user.username}}</ion-label>
+                          <ion-label slot="end">{{user.exchanged}}</ion-label>
                         </ion-item>
                   
-                        <ion-item>
-                          <ion-thumbnail slot="start">
-                            <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
-                          </ion-thumbnail>
-                          <ion-label>Item</ion-label>
-                        </ion-item>
-                  
-                        <ion-item>
-                          <ion-thumbnail slot="start">
-                            <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
-                          </ion-thumbnail>
-                          <ion-label>Item</ion-label>
-                        </ion-item>
-                  
-                        <ion-item lines="none">
-                          <ion-thumbnail slot="start">
-                            <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
-                          </ion-thumbnail>
-                          <ion-label>Item</ion-label>
-                        </ion-item>
                       </ion-list>
                     </ion-card-content>
                   </ion-card>
                 </ion-col>
               </ion-row>
             </ion-grid>
-          </ion-content>
         </ion-col>
       </ion-row>
     </ion-grid>
-  </ion-content>
+
 </ion-content>
