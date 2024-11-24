@@ -9,9 +9,10 @@ import { StorageService } from './storage.service';
 })
 export class AuctionService {
 
-  constructor(private http: HttpClient, private storage: StorageService, private userService: UserService) { }
+  constructor(private http: HttpClient, private storage: StorageService) { }
   apiURLAuctions = `${URL_SERVICIOS}/Auction`;
   apiObtainedCharacters = `${URL_SERVICIOS}/Obtained`;
+  apiURLUsers = `${URL_SERVICIOS}/User`;
 
   async getAuction(auctionId: string) {
     try {
@@ -24,7 +25,7 @@ export class AuctionService {
 
   async updateAuction(auction: any) {
     try {
-      const response = await this.http.put<any>(`${this.apiURLAuctions}/${auction._id}`, auction).toPromise();
+      const response = await this.http.put<any>(`${this.apiURLAuctions}`, auction).toPromise();
       return response;
     } catch (error) {
       console.error('Error updating auction', error);
@@ -95,19 +96,19 @@ export class AuctionService {
   }
 
   async exchangeCharacters(auction: any, acquirerId: string) {
+    console.log('exchangeCharacters', auction._id);
     try {
-      const acquirer = await this.userService.getUser(acquirerId);
-      if (!acquirer) {
-        throw new Error('Acquirer not found');
-      }
-      const updateAuction = {
+      let updateAuction = {
+        _id: auction._id,
         character1Id: auction.character1Id,
         character2Id: auction.character2Id,
-        auctionCreator: auction.auctionCreator,
-        acquirer: acquirer
+        acquirer: {_id: acquirerId},
+        creatorId : auction.creatorId,
       };
+      
       await this.updateAuction(updateAuction);
-      const response = await this.http.post<any>(`${this.apiObtainedCharacters}/exchange`, {updateAuction}).toPromise();
+      console.log('updateAuction', updateAuction);
+      const response = await this.http.post<any>(`https://backendrickymorty.onrender.com/api/Auction/exchange`, updateAuction).toPromise();
       this.storage.init();
       return response;
     } catch (error) {

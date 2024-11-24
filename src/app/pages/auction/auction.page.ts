@@ -17,7 +17,6 @@ export class AuctionPage implements OnInit {
   desiredCharacters: any[] = [];
   selectedScannedCharacter : any;
   selectedDesiredCharacter : any;
-  avaliableAuctions: any[] = [];
 
   constructor(private authService: AuthService, private auctionService: AuctionService, private storage: StorageService, private bd: RickyMortyBdService) { }
 
@@ -25,7 +24,6 @@ export class AuctionPage implements OnInit {
     await this.storage.init();
     await this.loadAuction();
     this.loadDesiredCharacter();
-    console.log('Auctions:', this.avaliableAuctions);
     console.log('Desired Characters:', this.desiredCharacters);
     console.log('Scanned Characters:', this.scannedCharacters);
   }
@@ -44,18 +42,8 @@ export class AuctionPage implements OnInit {
       for (let i = 0; i < this.scannedCharacters.length; i++) {
         this.scannedCharacters[i] = await this.bd.getCharacter(this.scannedCharacters[i].characterId).toPromise();
       }
-      this.avaliableAuctions = await this.auctionService.getAuctions();
     }catch (error){
       console.error('Error loading auctions', error);
-    }
-  }
-
-  async exchange(auction: any){
-    try{
-      await this.auctionService.exchangeCharacters(auction, this.authService.idUserLogged());
-      await this.loadAuction();
-    }catch (error){
-      console.error('Error saving auction', error);
     }
   }
 
@@ -66,7 +54,8 @@ export class AuctionPage implements OnInit {
         const auctionData = {
           character1Id : this.selectedScannedCharacter.id,
           character2Id : this.selectedDesiredCharacter.id,
-          auctionCreator : {_id: userId}
+          auctionCreator : {_id: userId},
+          creatorId: userId
         };
         console.log('Auction data:', auctionData);
         const response = await this.auctionService.createAuction(auctionData); 

@@ -12,7 +12,7 @@ export class UserService {
 
   async getUser(userId: string) {
     try {
-      const response = await this.http.get<any>(`${this.apiURLUsers}/${userId}`).toPromise();
+      const response = await this.http.get<any>(`${this.apiURLUsers}/find/${userId}`).toPromise();
       return response;
     } catch (error) {
       console.error('Error loading user', error);

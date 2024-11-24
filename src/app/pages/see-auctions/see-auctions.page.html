@@ -1,0 +1,57 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>seeAuctions</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Avaliable Auctions</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-grid>
+    <ion-row *ngIf="avaliableAuctions.length>0">
+      <ion-col size="12">
+        <!-- Recorre todas las subastas disponibles -->
+        <ion-card *ngFor="let auction of avaliableAuctions">
+          <ion-card-header>
+            <ion-card-title>Auction</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-grid>
+              <ion-row>
+                <!-- Personaje 1 -->
+                <ion-col size="6">
+                  <h3>Character 1</h3>
+                  <ion-thumbnail>
+                    <img [src]="auction.character1.image" alt="{{ auction.character1.name }}" />
+                  </ion-thumbnail>
+                  <p><strong>Name:</strong> {{ auction.character1.name }}</p>
+                </ion-col>
+
+                <!-- Personaje 2 -->
+                <ion-col size="6">
+                  <h3>Character 2</h3>
+                  <ion-thumbnail>
+                    <img [src]="auction.character2.image" alt="{{ auction.character2.name }}" />
+                  </ion-thumbnail>
+                  <p><strong>Name:</strong> {{ auction.character2.name }}</p>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+            <!-- Información adicional de la subasta -->
+            <p><strong>Date:</strong> {{ auction.auction.startDate }}</p>
+          </ion-card-content>
+          <ion-footer>
+            <!-- Botón para realizar el intercambio -->
+            <ion-button expand="block" color="primary" (click)="exchange(auction.auction)">
+              Exchange
+            </ion-button>
+          </ion-footer>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
