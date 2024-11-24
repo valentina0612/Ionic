@@ -8,8 +8,7 @@ import { AuthService } from './auth.service';
 import { RickyMortyBdService } from './ricky-morty-bd.service';
 import { UserService } from './user.service';
 import { UserDto } from '../model/user.dto';
-
-
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +18,7 @@ export class StorageService {
   private _localCharacters: FavoriteDto[] = [];
   private _scannedCharacters: ObtainedDto[] = [];
   private _storage: Storage | null = null;
+  private favoriteSubject: BehaviorSubject<FavoriteDto[]> = new BehaviorSubject<FavoriteDto[]>([]);
 
   constructor(private http: HttpClient, private storage: Storage, private authService: AuthService, private bd: RickyMortyBdService, private userService: UserService) {
     this.init();
@@ -42,6 +42,14 @@ export class StorageService {
     return this._scannedCharacters;
   }
 
+  getFavorites$(): Observable<FavoriteDto[]> {
+    return this.favoriteSubject.asObservable();
+  }
+
+  private updateFavoritesSubject() {
+    this.favoriteSubject.next(this._localCharacters);
+  }
+
   async loadFavoriteCharacters(userId: string) {
     try{
       const response = await this.http.get<any>(`${this.apiURLBack}/Favorite/user/${userId}`).toPromise();
@@ -52,6 +60,7 @@ export class StorageService {
           this._localCharacters[i]= character;
       }
       console.log( "Fetched characters from backend:", this._localCharacters)
+      this.updateFavoritesSubject();
     } catch (error) {
       console.error('Error loading characters from backend', error);
     }
@@ -145,6 +154,7 @@ export class StorageService {
       }
       console.log('Updated favorites:', this._localCharacters);
       this._localCharacters = await this.loadFavoriteCharacters(userId);
+      this.updateFavoritesSubject();
     }catch(error){
       console.error('Error adding or removing character', error);
     }

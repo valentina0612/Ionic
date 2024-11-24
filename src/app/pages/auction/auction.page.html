@@ -23,23 +23,19 @@
   <ion-content>
     <ion-grid>
       <ion-row>
-        <!-- Personajes Repetidos -->
+        <!-- Personajes Escaneados -->
         <ion-col size="5">
-          <h2 class="ion-text-center">Personajes Repetidos</h2>
+          <h2 class="ion-text-center">Personajes Escaneados</h2>
           <ion-content>
             <ion-grid>
               <ion-row>
-                <ion-col
-                  size="6"
-                >
-                  <ion-card
-                    
-                  >
+                <ion-col size="6" *ngFor="let character of scannedCharacters">
+                  <ion-card (click)="selectedScannedCharacter = character" [class.selected]="selectedScannedCharacter === character">
                     <ion-card-header>
-                      <ion-card-title>Nombre Personaje</ion-card-title>
+                      <ion-card-title>{{character.name}}</ion-card-title>
                     </ion-card-header>
                     <ion-card-content>
-                      <img [src]=""/>
+                      <img [src]="character.image"/>
                     </ion-card-content>
                   </ion-card>
                 </ion-col>
@@ -59,18 +55,13 @@
           <ion-content>
             <ion-grid>
               <ion-row>
-                <ion-col
-                  size="6"
-                  
-                >
-                  <ion-card
-                   
-                  >
+                <ion-col size="6" *ngFor="let character of desiredCharacters">
+                  <ion-card (click)="selectedDesiredCharacter = character" [class.selected]="selectedDesiredCharacter === character">
                     <ion-card-header>
-                      <ion-card-title>Nombre Personaje </ion-card-title>
+                      <ion-card-title>{{character.name}} </ion-card-title>
                     </ion-card-header>
                     <ion-card-content>
-                      <img [src]=""  />
+                      <img [src]="character.image"/>
                     </ion-card-content>
                   </ion-card>
                 </ion-col>
@@ -86,18 +77,17 @@
         <ion-row class="ion-align-items-center">
           <ion-col>
             <p>
-              Intercambiar: <strong>Nombre Personaje</strong>
+              Intercambiar: <strong>{{selectedScannedCharacter?.name || 'Selecciona un personaje'}}</strong>
             </p>
           </ion-col>
           <ion-col>
             <p>
-              Por: <strong>Nombre personaje</strong>
+              Por: <strong>{{selectedDesiredCharacter?.name || 'Selecciona un personaje'}}</strong>
             </p>
           </ion-col>
           <ion-col>
             <ion-button
-              expand="block"
-            >
+              expand="block" (click)="proposeExchange()">
               Proponer Intercambio
             </ion-button>
           </ion-col>
