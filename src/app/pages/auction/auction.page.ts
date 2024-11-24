@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { AuctionService } from 'src/app/services/auction.service';
+import { StorageService } from 'src/app/services/storage.service';
 
 
 @Component({
@@ -15,15 +16,16 @@ export class AuctionPage implements OnInit {
   selectedScannedCharacter : any;
   selectedDesiredCharacter : any;
 
-  constructor(private authService: AuthService, private auctionService: AuctionService) { }
+  constructor(private authService: AuthService, private auctionService: AuctionService, private storage: StorageService) { }
 
   ngOnInit() {
+    this.storage.init();
   }
 
   async loadAuction(){
     try{
-      this.scannedCharacters = await this.auctionService.getAuctionsByCreator(this.authService.idUserLogged());
-      this.desiredCharacters = await this.auctionService.getAvailableAuctions();
+      this.scannedCharacters = this.storage.scannedCharacters;
+      this.desiredCharacters = this.storage.localCharacters;
     }catch (error){
       console.error('Error loading auctions', error);
     }
