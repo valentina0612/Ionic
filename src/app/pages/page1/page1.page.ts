@@ -14,6 +14,7 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class Page1Page implements OnInit {
   characters: any[] = [];
+  exchangeCharacters: any[] = [];
   isSupported = false;
   barcodes: Barcode[] = [];
   coordinates: any;
@@ -27,6 +28,7 @@ export class Page1Page implements OnInit {
       this.isSupported = result.supported;
     });
     await this.getScannedCharacters();
+    await this.getExchangedCharacters();
     this.coords = await this.locate();
   }
 
@@ -87,6 +89,18 @@ export class Page1Page implements OnInit {
       );
     }
     console.log('Markers', this.markers);
+  }
+
+  async getExchangedCharacters() {
+    this.exchangeCharacters = this.storageService.exchangedCharacters;
+    for (let i = 0; i < this.exchangeCharacters.length; i++) {
+      const character = this.exchangeCharacters[i];
+      this.bd.getCharacter(character.characterId).toPromise().then((res: any) => {
+        this.exchangeCharacters[i].character = res;
+        this.exchangeCharacters[i].date = this.exchangeCharacters[i].date.toISOString().split('T')[0];
+      }
+      );
+    }
   }
 
   logOut() {

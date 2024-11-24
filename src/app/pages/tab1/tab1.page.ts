@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { InfiniteScrollCustomEvent } from '@ionic/angular';
 import { AuthService } from 'src/app/services/auth.service';
 import { RickyMortyBdService } from 'src/app/services/ricky-morty-bd.service';
+import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
   selector: 'app-tab1',
@@ -15,7 +16,7 @@ export class Tab1Page {
   url_next: string = '';  
 
   //La injeccion del servicio para traer los datos
-  constructor(private bd: RickyMortyBdService, private authService: AuthService) {
+  constructor(private bd: RickyMortyBdService, private authService: AuthService, private storageService: StorageService) {
 
 
   }

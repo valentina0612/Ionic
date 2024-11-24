@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { RickyMortyBdService } from 'src/app/services/ricky-morty-bd.service';
+import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
   selector: 'app-page3',
@@ -13,7 +14,7 @@ export class Page3Page implements OnInit {
   characters!:any[]
   url_next: string = '';
   show: boolean = false;
-  constructor(private activatedRoute:ActivatedRoute, private bd: RickyMortyBdService, private authService: AuthService) { 
+  constructor(private activatedRoute:ActivatedRoute, private bd: RickyMortyBdService, private authService: AuthService, private storage: StorageService) { 
     this.activatedRoute.params.subscribe(params => {
       this.locationName = params['locationName'];
       console.log('locationId', this.locationName);

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { RankingService } from 'src/app/services/ranking.service';
+import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
   selector: 'app-ranking',
@@ -10,7 +11,7 @@ import { RankingService } from 'src/app/services/ranking.service';
 export class RankingPage implements OnInit {
   rankingExchanged: any[] = [];
   rankingCaptured: any[] = [];
-  constructor(private authService: AuthService, private rankingService: RankingService) { }
+  constructor(private authService: AuthService, private rankingService: RankingService, private storageService: StorageService) { }
 
   ngOnInit() {
     this.getRanking();

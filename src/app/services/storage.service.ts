@@ -17,6 +17,7 @@ export class StorageService {
   private apiURLBack = URL_SERVICIOS;
   private _localCharacters: FavoriteDto[] = [];
   private _scannedCharacters: ObtainedDto[] = [];
+  private _exchangedCharacters: ObtainedDto[] = [];
   private _storage: Storage | null = null;
   private favoriteSubject: BehaviorSubject<FavoriteDto[]> = new BehaviorSubject<FavoriteDto[]>([]);
 
@@ -40,6 +41,10 @@ export class StorageService {
 
   get scannedCharacters(): ObtainedDto[] {
     return this._scannedCharacters;
+  }
+
+  get exchangedCharacters(): ObtainedDto[] {
+    return this._exchangedCharacters;
   }
 
   getFavorites$(): Observable<FavoriteDto[]> {
@@ -69,7 +74,7 @@ export class StorageService {
 
   async loadScannedCharacters(userId: string) {
     try{
-      const response = await this.http.get<any>(`${this.apiURLBack}/Obtained/${userId}`).toPromise();
+      const response = await this.http.get<any>(`${this.apiURLBack}/Obtained/user/${userId}/method/Captured`).toPromise();
       console.log('Response from backend:', response);
       this._scannedCharacters = response.obtained.map((obtained: any) => ({
         id: obtained._id,
@@ -85,6 +90,23 @@ export class StorageService {
     }
   }
 
+  async loadExchangeCharacters(userId: string) {
+    try{
+      const response = await this.http.get<any>(`${this.apiURLBack}/user/${userId}/method/Exchanged`).toPromise();
+      console.log('Response from backend:', response);
+      this._exchangedCharacters = response.exchange.map((exchange: any) => ({
+        id: exchange._id,
+        characterId: exchange.characterId,
+        location: exchange.location,
+        date: new Date(exchange.date),
+        method: exchange.method,
+        user: exchange.user
+      }));
+      console.log( "Exchange characters", this._exchangedCharacters)
+    } catch (error) {
+      console.error('Error loading characters', error);
+    }
+  }
 
   async addScannedCharacter(characterId: number, userId: string, coords?: { lat: number, lng: number }) {
     console.log('Adding scanned character:', characterId);

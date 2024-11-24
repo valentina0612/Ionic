@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { InfiniteScrollCustomEvent } from '@ionic/angular';
 import { AuthService } from 'src/app/services/auth.service';
 import { RickyMortyBdService } from 'src/app/services/ricky-morty-bd.service';
+import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
   selector: 'app-tab2',
@@ -12,7 +13,7 @@ export class Tab2Page {
 
   locations:any[] = [];
   next_url: string = '';
-  constructor(private bd:RickyMortyBdService, private authService: AuthService) {
+  constructor(private bd:RickyMortyBdService, private authService: AuthService, private storage: StorageService) {
 
   }
   ngOnInit() {

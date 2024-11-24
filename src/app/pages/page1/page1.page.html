@@ -12,18 +12,18 @@
 <ion-content [fullscreen]="true">
 
   <app-map [markers]="markers"></app-map>
-  <ion-list *ngIf="characters.length!=0">
-    <ion-item *ngFor="let character of characters">
+  <ion-list *ngIf="characters.length + exchangeCharacters.length > 0">
+    <ion-item *ngFor="let character of characters.concat(exchangeCharacters)">
       <ion-thumbnail slot="start">
-        <img alt="Silhouette of mountains"
-        src="{{character.character.image}}"
-        />
+        <img alt="Silhouette of mountains" src="{{character.character.image}}" />
       </ion-thumbnail>
       <ion-label>{{character.character.name}}</ion-label>
       <ion-label>{{ character.date }}</ion-label>
       <ion-label>{{ character.method }}</ion-label>
     </ion-item>
   </ion-list>
+  
+
   <ion-list>
     <ion-item *ngFor="let barcode of barcodes">
       <ion-label position="stacked">{{ barcode.format }}</ion-label>
