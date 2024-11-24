@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
+import { RankingService } from 'src/app/services/ranking.service';
 
 @Component({
   selector: 'app-ranking',
@@ -7,14 +8,23 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./ranking.page.scss'],
 })
 export class RankingPage implements OnInit {
-
-  constructor(private authService: AuthService) { }
+  rankingExchanged: any[] = [];
+  rankingCaptured: any[] = [];
+  constructor(private authService: AuthService, private rankingService: RankingService) { }
 
   ngOnInit() {
+    this.getRanking();
   }
 
   logOut() {
     this.authService.logout();
+  }
+
+  async getRanking() {
+    this.rankingCaptured= await this.rankingService.getCapturedCharacters();
+    this.rankingExchanged = await this.rankingService.getExchangedCharacters();
+    console.log('Ranking exchanged', this.rankingExchanged);
+    console.log('Ranking captured', this.rankingCaptured);
   }
 
 }
