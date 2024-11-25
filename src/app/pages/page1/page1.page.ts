@@ -66,7 +66,8 @@ export class Page1Page implements OnInit {
   async saveCharacter(character: any) {
     const coords = {lat: this.coords.coords.latitude, lng:this.coords.coords.longitude};
     await this.storageService.addScannedCharacter(character.id, this.authService.idUserLogged(), coords);
-    this.getScannedCharacters();
+    this.characters = [];
+    await this.getScannedCharacters();
   }
 
   async requestPermissions(): Promise<boolean> {
@@ -93,7 +94,6 @@ export class Page1Page implements OnInit {
         await this.updateCharacterData(character);
       }
       console.log('Markers', this.markers);
-      this.cdr.detectChanges();
     } catch (error) {
       console.error('Error fetching scanned characters:', error);
     }
@@ -120,33 +120,19 @@ export class Page1Page implements OnInit {
   async getExchangedCharacters() {
     try {
       this.exchangeCharacters = this.storageService.exchangedCharacters;
-      await this.processExchangedCharacters();
-      this.cdr.detectChanges();
+      console.log('Exchanged characters:', this.exchangeCharacters);
+      for (let character of this.exchangeCharacters) {
+        const res: any = await this.bd.getCharacter(character.characterId).toPromise();
+        character.character = res;
+        character.date = new Date(character.date).toISOString().split('T')[0];
+      }
+      console.log('Exchanged characters:', this.exchangeCharacters);
+
     } catch (error) {
       console.error('Error fetching exchanged characters:', error);
     }
   }
   
-  private async processExchangedCharacters() {
-    try {
-      for (let character of this.exchangeCharacters) {
-        await this.updateExchangedCharacterData(character);
-      }
-    } catch (error) {
-      console.error('Error processing exchanged characters:', error);
-    }
-  }
-  
-  private async updateExchangedCharacterData(character: any) {
-    try {
-      const res: any = await this.bd.getCharacter(character.characterId).toPromise();
-  
-      character.character = res;
-      character.date = new Date(character.date).toISOString().split('T')[0];
-    } catch (error) {
-      console.error(`Error updating exchanged character data for ID ${character.characterId}:`, error);
-    }
-  }
   
 
   logOut() {

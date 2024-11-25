@@ -1,11 +1,23 @@
-
 ion-tab-bar {
-    display: flex;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
-  
-  ion-tab-button {
-    flex-shrink: 0; /* Evita que los botones se compriman */
-  }
-  
+  display: flex;
+  overflow-x: auto; /* Habilita desplazamiento horizontal */
+  white-space: nowrap; /* Mantiene los botones en línea */
+  scrollbar-width: none; /* Oculta scroll en Firefox */
+  -ms-overflow-style: none; /* Oculta scroll en IE */
+  padding: 0; /* Asegúrate de que no haya padding */
+  margin: 0; /* Evita márgenes que afecten el diseño */
+  width: 100%; /* Asegura que la barra ocupe el ancho completo */
+  box-sizing: border-box; /* Evita que el padding/margen altere el ancho */
+}
+
+ion-tab-button {
+  padding: 0 1px; /* Espaciado interno de los botones */
+}
+ion-tab-bar {
+  scroll-snap-type: x mandatory; /* Permite scroll alineado */
+}
+
+ion-tab-button {
+  scroll-snap-align: start; /* Asegura que el primer botón esté al inicio */
+}
+

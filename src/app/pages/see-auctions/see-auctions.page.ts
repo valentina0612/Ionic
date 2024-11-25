@@ -11,7 +11,7 @@ import { StorageService } from 'src/app/services/storage.service';
   styleUrls: ['./see-auctions.page.scss'],
 })
 export class SeeAuctionsPage implements OnInit {
-  avaliableAuctions: any[] = [];
+  avaliableAuctions: any[] = [] ;
   loggedUserId: string = this.authService.idUserLogged();
   constructor(private authService: AuthService, private auctionService: AuctionService, private storage: StorageService, private bd: RickyMortyBdService, private alertControler: AlertController) { }
 
@@ -30,26 +30,47 @@ export class SeeAuctionsPage implements OnInit {
 
   async loadAuction() {
     try {
-      let auctions = await this.auctionService.getAvailableAuctions();
+      // Obtener las subastas disponibles
+      const response = await this.auctionService.getAvailableAuctions();
       
-      // Convertir un objeto en un array si no es ya un array
-      this.avaliableAuctions = Array.isArray(auctions) ? auctions : [auctions];
+      // Verifica si la propiedad 'auction' existe y es un arreglo
+      this.avaliableAuctions = Array.isArray(response.auction) ? response.auction : [];
+      
+      if (this.avaliableAuctions.length === 0) {
+        this.showAlert('There are no available auctions.');
+        return;
+      }
   
       // Procesar los datos de los personajes
-      for (let i = 0; i < this.avaliableAuctions.length; i++) {
-        this.avaliableAuctions[i].auction.startDate = new Date(this.avaliableAuctions[i].auction.startDate);
-        this.avaliableAuctions[i].character1 = await this.bd.getCharacter(this.avaliableAuctions[i].auction.character1Id).toPromise();
-        this.avaliableAuctions[i].character2 = await this.bd.getCharacter(this.avaliableAuctions[i].auction.character2Id).toPromise();
-      }
+      this.avaliableAuctions = await Promise.all(
+        this.avaliableAuctions.map(async (auction) => {
+          const [character1, character2] = await Promise.all([
+            this.bd.getCharacter(auction.character1Id).toPromise(),
+            this.bd.getCharacter(auction.character2Id).toPromise(),
+          ]);
+          return { ...auction, character1, character2 };
+        })
+      );
+  
+    
     } catch (error) {
       console.error('Error loading auctions', error);
+      this.showAlert('An error occurred while loading auctions.');
     }
   }
+  
 
   async exchange(auction: any){
     console.log('exchange', auction);
     try{
-      await this.auctionService.exchangeCharacters(auction, this.authService.idUserLogged());
+      const response = await this.auctionService.exchangeCharacters(auction, this.authService.idUserLogged());
+      if (response){
+        this.showAlert('Characters exchanged successfully.');
+        this.loadAuction();
+      }
+      else{
+        this.showAlert('Error exchanging characters.');
+      }
     }catch (error){
       this.showAlert('Error exchanging characters.');
     }

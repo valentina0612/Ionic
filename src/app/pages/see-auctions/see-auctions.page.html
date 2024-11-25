@@ -26,31 +26,31 @@
                 <ion-col size="6">
                   <h3>Character 1</h3>
                   <ion-thumbnail>
-                    <img [src]="auction.character1.image" alt="{{ auction.character1.name }}" />
+                    <img [src]="auction.character1?.image" alt="{{ auction.character1?.name }}" />
                   </ion-thumbnail>
-                  <p><strong>Name:</strong> {{ auction.character1.name }}</p>
+                  <p><strong>Name:</strong> {{ auction.character1?.name}}</p>
                 </ion-col>
 
                 <!-- Personaje 2 -->
                 <ion-col size="6">
                   <h3>Character 2</h3>
                   <ion-thumbnail>
-                    <img [src]="auction.character2.image" alt="{{ auction.character2.name }}" />
+                    <img [src]="auction.character2?.image" alt="{{ auction.character2?.name }}" />
                   </ion-thumbnail>
-                  <p><strong>Name:</strong> {{ auction.character2.name }}</p>
+                  <p><strong>Name:</strong> {{ auction.character2?.name }}</p>
                 </ion-col>
               </ion-row>
             </ion-grid>
             <!-- Información adicional de la subasta -->
-            <p><strong>Date:</strong> {{ auction.auction.startDate }}</p>
+            <p><strong>Date:</strong> {{ auction.startDate }}</p>
           </ion-card-content>
           <ion-footer>
             <!-- Botón para realizar el intercambio -->
             <ion-button 
             expand="block" 
             color="primary" 
-            (click)="exchange(auction.auction)" 
-            [disabled]="auction.auction.creatorId === loggedUserId">
+            (click)="exchange(auction)" 
+            [disabled]="auction.creatorId === loggedUserId">
             Exchange
           </ion-button>          
           </ion-footer>

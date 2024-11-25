@@ -113,9 +113,8 @@ export class StorageService {
 
   async loadExchangeCharacters(userId: string) {
     try{
-      const response = await this.http.get<any>(`${this.apiURLBack}/user/${userId}/method/Exchanged`).toPromise();
-      console.log('Response from backend:', response);
-      this._exchangedCharacters = response.exchange.map((exchange: any) => ({
+      const response = await this.http.get<any>(`${this.apiURLBack}/Obtained/user/${userId}/method/Exchanged`).toPromise();
+      this._exchangedCharacters = response.obtained.map((exchange: any) => ({
         id: exchange._id,
         characterId: exchange.characterId,
         location: exchange.location,

@@ -36,9 +36,9 @@ export class AuctionPage implements OnInit {
     console.log('Scanned Characters:', this.scannedCharacters);
   }
 
-  async showAlert(error: string) {
+  async showAlert(error: string, header = 'Error') {
     const alert = await this.alertController.create({
-      header: 'Error',
+      header: header,
       subHeader: error,
       buttons: ['OK'],
     });
@@ -77,7 +77,7 @@ export class AuctionPage implements OnInit {
         const response = await this.auctionService.createAuction(auctionData); 
         await this.auctionService.getAuctions();
         if(response){
-          this.showAlert('Exchange proposed successfully');
+          this.showAlert('Exchange proposed successfully', 'Success');
         }
         else{
           this.showAlert('Error proposing exchange. It is possible you have an active auction');

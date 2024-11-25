@@ -48,7 +48,6 @@ export class AuctionService {
   async getAuctions() {
     try {
       const response = await this.http.get<any>(`${this.apiURLAuctions}`).toPromise();
-      this.auctionsSubject.next(response);
       return response;
     } catch (error) {
       console.error('Error loading auctions', error);
@@ -85,6 +84,8 @@ export class AuctionService {
   async getAvailableAuctions() {
     try {
       const response = await this.http.get<any>(`${this.apiURLAuctions}/completed/false`).toPromise();
+      console.log('Available auctions:', response);
+      this.auctionsSubject.next(response);
       return response;
     } catch (error) {
       console.error('Error loading available auctions', error);
