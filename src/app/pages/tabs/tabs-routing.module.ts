@@ -32,6 +32,10 @@ const routes: Routes = [
         loadChildren: () => import('../auction/auction.module').then( m => m.AuctionPageModule)
       },
       {
+        path:'see-auctions',
+        loadChildren: () => import('../see-auctions/see-auctions.module').then( m => m.SeeAuctionsPageModule)
+      },
+      {
         path: '',
         redirectTo: '/tabs/tab1',
         pathMatch: 'full'

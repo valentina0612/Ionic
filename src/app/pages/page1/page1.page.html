@@ -11,7 +11,7 @@
 
 <ion-content [fullscreen]="true">
 
-  <app-map [markers]="markers"></app-map>
+  <app-map *ngIf="showMap" [markers]="markers"></app-map>
   <ion-list *ngIf="characters.length + exchangeCharacters.length > 0">
     <ion-item *ngFor="let character of characters.concat(exchangeCharacters)">
       <ion-thumbnail slot="start">

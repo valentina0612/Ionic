@@ -21,19 +21,12 @@ export class Page1Page implements OnInit {
   coordinates: any;
   markers: any[] = [];
   coords: any;
-  private scanned!: Subscription;
-  private exchanged!: Subscription;
+  scanned!: Subscription;
+  exchanged!: Subscription;
+  showMap = false;
   
   constructor(private bd: RickyMortyBdService, private alertController: AlertController, private storageService: StorageService, private cdr: ChangeDetectorRef, private authService: AuthService) { }
 
-  ngOnDestroy() {
-    if (this.scanned) {
-      this.scanned.unsubscribe();
-    }
-    if (this.exchanged) {
-      this.exchanged.unsubscribe();
-    }
-  }
 
   async ngOnInit() {
     BarcodeScanner.isSupported().then((result) => {
@@ -42,6 +35,7 @@ export class Page1Page implements OnInit {
     await this.getScannedCharacters();
     await this.getExchangedCharacters();
     this.coords = await this.locate();
+    this.showMap = true;
   }
 
   async locate() {
@@ -91,19 +85,13 @@ export class Page1Page implements OnInit {
 
   async getScannedCharacters() {
     try {
-      // Suscripción al observable para obtener personajes escaneados
-      this.scanned = this.storageService.getScannedCharacters$().subscribe((data: any[]) => {
-        this.characters = data; 
-      });
   
       // Obtén los personajes almacenados directamente
       this.characters = this.storageService.scannedCharacters;
-  
       // Itera sobre los personajes y obtén su información
       for (let character of this.characters) {
         await this.updateCharacterData(character);
       }
-  
       console.log('Markers', this.markers);
       this.cdr.detectChanges();
     } catch (error) {
@@ -131,12 +119,9 @@ export class Page1Page implements OnInit {
 
   async getExchangedCharacters() {
     try {
-      // Suscripción al observable para obtener personajes intercambiados
-      this.storageService.getExchangedCharacters$().subscribe((data) => {
-        this.exchangeCharacters = data;
-        this.processExchangedCharacters(); // Procesa los datos recibidos
-        this.cdr.detectChanges();
-      });
+      this.exchangeCharacters = this.storageService.exchangedCharacters;
+      await this.processExchangedCharacters();
+      this.cdr.detectChanges();
     } catch (error) {
       console.error('Error fetching exchanged characters:', error);
     }
