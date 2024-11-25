@@ -22,10 +22,20 @@ export class RankingPage implements OnInit {
   }
 
   async getRanking() {
-    this.rankingCaptured= await this.rankingService.getCapturedCharacters();
-    this.rankingExchanged = await this.rankingService.getExchangedCharacters();
-    console.log('Ranking exchanged', this.rankingExchanged);
-    console.log('Ranking captured', this.rankingCaptured);
+   // Suscribirse a los cambios en los rankings
+   this.rankingService.capturedCharacters$.subscribe((data) => {
+    this.rankingCaptured = data;
+    console.log('Updated captured ranking:', this.rankingCaptured);
+  });
+
+  this.rankingService.exchangedCharacters$.subscribe((data) => {
+    this.rankingExchanged = data;
+    console.log('Updated exchanged ranking:', this.rankingExchanged);
+  });
+
+  // Inicializar la actualización de los datos
+  this.rankingService.getCapturedCharacters();
+  this.rankingService.getExchangedCharacters();
   }
 
 }

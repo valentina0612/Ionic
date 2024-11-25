@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { URL_SERVICIOS } from '../config/url.servicios';
 import { UserService } from './user.service';
 import { StorageService } from './storage.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,9 @@ export class AuctionService {
   apiURLAuctions = `${URL_SERVICIOS}/Auction`;
   apiObtainedCharacters = `${URL_SERVICIOS}/Obtained`;
   apiURLUsers = `${URL_SERVICIOS}/User`;
+
+  private auctionsSubject = new BehaviorSubject<any[]>([]);
+  auctions$ = this.auctionsSubject.asObservable();
 
   async getAuction(auctionId: string) {
     try {
@@ -44,6 +48,7 @@ export class AuctionService {
   async getAuctions() {
     try {
       const response = await this.http.get<any>(`${this.apiURLAuctions}`).toPromise();
+      this.auctionsSubject.next(response);
       return response;
     } catch (error) {
       console.error('Error loading auctions', error);
@@ -110,6 +115,8 @@ export class AuctionService {
       console.log('updateAuction', updateAuction);
       const response = await this.http.post<any>(`https://backendrickymorty.onrender.com/api/Auction/exchange`, updateAuction).toPromise();
       this.storage.init();
+      // Recargar las subastas después de un intercambio exitoso
+      this.getAuctions();
       return response;
     } catch (error) {
       console.error('Error exchanging characters', error);
