@@ -2,16 +2,23 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { URL_SERVICIOS } from '../config/url.servicios';
 import { UserService } from './user.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RankingService {
 
-  constructor(private http: HttpClient, private userService: UserService) { }
   apiURLRanking = `${URL_SERVICIOS}/Obtained`;
   capturedCharacters: any[] = [];
   exchangedCharacters: any[] = [];
+  private capturedCharactersSubject = new BehaviorSubject<any[]>([]);
+  private exchangedCharactersSubject = new BehaviorSubject<any[]>([]);
+  capturedCharacters$ = this.capturedCharactersSubject.asObservable();
+  exchangedCharacters$ = this.exchangedCharactersSubject.asObservable();
+
+
+  constructor(private http: HttpClient, private userService: UserService) { }
 
   async getCapturedCharacters() {
     try {
@@ -30,6 +37,7 @@ export class RankingService {
         }
       }
       this.capturedCharacters.sort((a, b) => b.captured - a.captured);
+      this.capturedCharactersSubject.next(this.capturedCharacters);
       return this.capturedCharacters;
       
   } catch (error) {
@@ -55,6 +63,7 @@ async getExchangedCharacters() {
       }
     }
     this.exchangedCharacters.sort((a, b) => b.exchanged - a.exchanged);
+    this.exchangedCharactersSubject.next(this.exchangedCharacters);
     return this.exchangedCharacters;
     
 } catch (error) {
