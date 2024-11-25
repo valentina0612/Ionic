@@ -105,6 +105,7 @@ export class Page1Page implements OnInit {
       }
   
       console.log('Markers', this.markers);
+      this.cdr.detectChanges();
     } catch (error) {
       console.error('Error fetching scanned characters:', error);
     }
@@ -134,6 +135,7 @@ export class Page1Page implements OnInit {
       this.storageService.getExchangedCharacters$().subscribe((data) => {
         this.exchangeCharacters = data;
         this.processExchangedCharacters(); // Procesa los datos recibidos
+        this.cdr.detectChanges();
       });
     } catch (error) {
       console.error('Error fetching exchanged characters:', error);

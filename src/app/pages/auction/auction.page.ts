@@ -18,11 +18,18 @@ export class AuctionPage implements OnInit {
   desiredCharacters: any[] = [];
   selectedScannedCharacter : any;
   selectedDesiredCharacter : any;
+  auctions: any[] = [];
 
   constructor(private authService: AuthService, private auctionService: AuctionService, private storage: StorageService, private bd: RickyMortyBdService, private alertController: AlertController) { }
 
   async ngOnInit() {
     await this.storage.init();
+    // Suscribir a las actualizaciones de las subastas
+    this.auctionService.auctions$.subscribe((auctions) => {
+      this.auctions = auctions;
+      console.log('Updated auctions:', this.auctions);
+    });
+    await this.auctionService.getAuctions();
     await this.loadAuction();
     this.loadDesiredCharacter();
     console.log('Desired Characters:', this.desiredCharacters);
@@ -68,7 +75,7 @@ export class AuctionPage implements OnInit {
           creatorId: userId
         };
         const response = await this.auctionService.createAuction(auctionData); 
-        await this.loadAuction();
+        await this.auctionService.getAuctions();
         if(response){
           this.showAlert('Exchange proposed successfully');
         }

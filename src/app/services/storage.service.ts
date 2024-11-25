@@ -19,7 +19,10 @@ export class StorageService {
   private _scannedCharacters: ObtainedDto[] = [];
   private _exchangedCharacters: ObtainedDto[] = [];
   private _storage: Storage | null = null;
+
   private favoriteSubject: BehaviorSubject<FavoriteDto[]> = new BehaviorSubject<FavoriteDto[]>([]);
+  private scannedSubject: BehaviorSubject<ObtainedDto[]> = new BehaviorSubject<ObtainedDto[]>([]);
+  private exchangedSubject: BehaviorSubject<ObtainedDto[]> = new BehaviorSubject<ObtainedDto[]>([]);
 
   constructor(private http: HttpClient, private storage: Storage, private authService: AuthService, private bd: RickyMortyBdService, private userService: UserService) {
     this.init();
@@ -31,6 +34,7 @@ export class StorageService {
     this._storage = this.storage;
     await this.loadFavoriteCharacters(this.authService.idUserLogged());
     await this.loadScannedCharacters(this.authService.idUserLogged());
+    await this.loadExchangeCharacters(this.authService.idUserLogged());
   }
 
 
@@ -52,19 +56,23 @@ export class StorageService {
   }
 
   getScannedCharacters$(): Observable<ObtainedDto[]> {
-    return new Observable<ObtainedDto[]>(observer => {
-      observer.next(this._scannedCharacters);
-    });
+    return this.scannedSubject.asObservable();
   }
 
   getExchangedCharacters$(): Observable<ObtainedDto[]> {
-    return new Observable<ObtainedDto[]>(observer => {
-      observer.next(this._exchangedCharacters);
-    });
+    return this.exchangedSubject.asObservable();
   }
 
   private updateFavoritesSubject() {
     this.favoriteSubject.next(this._localCharacters);
+  }
+
+  private updateScannedSubject() {
+    this.scannedSubject.next(this._scannedCharacters);
+  }
+
+  private updateExchangedSubject() {
+    this.exchangedSubject.next(this._exchangedCharacters);
   }
 
   async loadFavoriteCharacters(userId: string) {
@@ -97,6 +105,7 @@ export class StorageService {
         user: obtained.user
       }));
       console.log( "Obtained characters", this._scannedCharacters)
+      this.updateScannedSubject();
     } catch (error) {
       console.error('Error loading characters', error);
     }
@@ -115,6 +124,7 @@ export class StorageService {
         user: exchange.user
       }));
       console.log( "Exchange characters", this._exchangedCharacters)
+      this.updateExchangedSubject();
     } catch (error) {
       console.error('Error loading characters', error);
     }
@@ -147,6 +157,7 @@ export class StorageService {
             },
             ...this._scannedCharacters,
           ];
+          this.updateScannedSubject();
         } else {
           throw new Error('User not found');
         }
