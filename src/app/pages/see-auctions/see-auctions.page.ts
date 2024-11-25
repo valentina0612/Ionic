@@ -4,6 +4,7 @@ import { AuctionService } from 'src/app/services/auction.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { RickyMortyBdService } from 'src/app/services/ricky-morty-bd.service';
 import { StorageService } from 'src/app/services/storage.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-see-auctions',
@@ -13,15 +14,15 @@ import { StorageService } from 'src/app/services/storage.service';
 export class SeeAuctionsPage implements OnInit {
   avaliableAuctions: any[] = [] ;
   loggedUserId: string = this.authService.idUserLogged();
-  constructor(private authService: AuthService, private auctionService: AuctionService, private storage: StorageService, private bd: RickyMortyBdService, private alertControler: AlertController) { }
+  constructor(private authService: AuthService, private auctionService: AuctionService, private storage: StorageService, private bd: RickyMortyBdService, private alertControler: AlertController, private userService: UserService) { }
 
   ngOnInit() {
     this.loadAuction();
   }
 
-  async showAlert(error: string) {
+  async showAlert(error: string, header: string = 'Error') {
     const alert = await this.alertControler.create({
-      header: 'Error',
+      header: header,
       subHeader: error,
       buttons: ['OK'],
     });
@@ -44,11 +45,22 @@ export class SeeAuctionsPage implements OnInit {
       // Procesar los datos de los personajes
       this.avaliableAuctions = await Promise.all(
         this.avaliableAuctions.map(async (auction) => {
-          const [character1, character2] = await Promise.all([
+          const [character1, character2, user] = await Promise.all([
             this.bd.getCharacter(auction.character1Id).toPromise(),
             this.bd.getCharacter(auction.character2Id).toPromise(),
+            await this.userService.getUser(auction.creatorId)
+            
+            
           ]);
-          return { ...auction, character1, character2 };
+          let formattedDate = new Date(auction.startDate);
+          const date = formattedDate.toLocaleDateString('es-ES', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+          });
+          return { ...auction, character1, character2, user, date };
         })
       );
   
@@ -65,7 +77,7 @@ export class SeeAuctionsPage implements OnInit {
     try{
       const response = await this.auctionService.exchangeCharacters(auction, this.authService.idUserLogged());
       if (response){
-        this.showAlert('Characters exchanged successfully.');
+        this.showAlert('Characters exchanged successfully.', 'Success');
         this.loadAuction();
       }
       else{
@@ -74,6 +86,10 @@ export class SeeAuctionsPage implements OnInit {
     }catch (error){
       this.showAlert('Error exchanging characters.');
     }
+  }
+
+  logOut() {
+    this.authService.logout();
   }
 
 }

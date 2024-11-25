@@ -75,7 +75,7 @@ export class AuctionPage implements OnInit {
           creatorId: userId
         };
         const response = await this.auctionService.createAuction(auctionData); 
-        await this.auctionService.getAuctions();
+        await this.auctionService.getAvailableAuctions();
         if(response){
           this.showAlert('Exchange proposed successfully', 'Success');
         }

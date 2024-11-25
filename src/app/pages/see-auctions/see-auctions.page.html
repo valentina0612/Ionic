@@ -1,16 +1,13 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>seeAuctions</ion-title>
+    <ion-title>Avaliable Auctions</ion-title>
+    <ion-buttons slot="end">
+      <ion-button size="default" (click)="logOut()"><ion-icon slot="start" name="log-out-outline"></ion-icon> Log Out</ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-header>
-    <ion-toolbar>
-      <ion-title>Avaliable Auctions</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
   <ion-grid>
     <ion-row *ngIf="avaliableAuctions.length>0">
       <ion-col size="12">
@@ -24,7 +21,7 @@
               <ion-row>
                 <!-- Personaje 1 -->
                 <ion-col size="6">
-                  <h3>Character 1</h3>
+                  <h3>Offered</h3>
                   <ion-thumbnail>
                     <img [src]="auction.character1?.image" alt="{{ auction.character1?.name }}" />
                   </ion-thumbnail>
@@ -33,7 +30,7 @@
 
                 <!-- Personaje 2 -->
                 <ion-col size="6">
-                  <h3>Character 2</h3>
+                  <h3>Requested</h3>
                   <ion-thumbnail>
                     <img [src]="auction.character2?.image" alt="{{ auction.character2?.name }}" />
                   </ion-thumbnail>
@@ -42,7 +39,8 @@
               </ion-row>
             </ion-grid>
             <!-- Información adicional de la subasta -->
-            <p><strong>Date:</strong> {{ auction.startDate }}</p>
+            <p><strong>User:</strong> {{ auction.user?.user.username}}</p>
+            <p><strong>Date:</strong> {{ auction.date }}</p>
           </ion-card-content>
           <ion-footer>
             <!-- Botón para realizar el intercambio -->

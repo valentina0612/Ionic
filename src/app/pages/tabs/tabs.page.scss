@@ -11,6 +11,8 @@ ion-tab-bar {
 }
 
 ion-tab-button {
+  flex: 1; /* Asegura que los botones ocupen el mismo ancho */
+  display: flex; /* Asegura que los botones sean flexibles */
   padding: 0 1px; /* Espaciado interno de los botones */
 }
 ion-tab-bar {

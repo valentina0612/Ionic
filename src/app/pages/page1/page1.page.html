@@ -15,11 +15,11 @@
   <ion-list *ngIf="characters.length + exchangeCharacters.length > 0">
     <ion-item *ngFor="let character of characters.concat(exchangeCharacters)">
       <ion-thumbnail slot="start">
-        <img alt="Silhouette of mountains" src="{{character.character.image}}" />
+        <img alt="Silhouette of mountains" src="{{character.character?.image}}" />
       </ion-thumbnail>
-      <ion-label>{{character.character.name}}</ion-label>
-      <ion-label>{{ character.date }}</ion-label>
-      <ion-label>{{ character.method }}</ion-label>
+      <ion-label>{{character.character?.name}}</ion-label>
+      <ion-label>{{ character?.date }}</ion-label>
+      <ion-label>{{ character?.method }}</ion-label>
     </ion-item>
   </ion-list>
   
