@@ -26,7 +26,7 @@ async initializeMap() {
   this.map = await GoogleMap.create({
     id: 'my-map', // ID del mapa
     element: document.getElementById('map') as HTMLElement, // Referencia al elemento HTML donde se renderiza el mapa
-    apiKey: 'AIzaSyBcMpK8lzktz7_LtsldytZEVH9uhBPSnBg', // Tu clave de API de Google Maps
+    apiKey: '', // Tu clave de API de Google Maps
     config: {
       center: {
         lat: 3.4514,
